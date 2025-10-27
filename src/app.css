@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: 'Fractul';
+	font-weight: 300;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Fractul';
+	font-weight: 400;
+}
+
+p {
+	line-height: 1.27;
+}
+
+strong {
+	font-weight: bold;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: var(--primaty-green);
+	border-radius: 6px;
+	border: 3px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--primaty-green);
+}
+
+/* Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--primaty-green) transparent;
+}
+
+/* Make images and videos non-selectable and non-draggable */
+img,
+video {
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	drag: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-o-user-drag: none;
+}
+
+:root {
+	--primary-dark: #202221;
+	--primary-light: #d9d9d9;
+
+	--primaty-green: #cdef33;
+}
