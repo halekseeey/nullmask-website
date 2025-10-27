@@ -236,4 +236,13 @@
 	/>
 
 	<Boxes animationDuration={ANIMATION_DURATION} bind:isAnimating={isHovered} />
+
+	<rect
+		width="206"
+		height="294.85"
+		fill="transparent"
+		on:mouseenter={handleMouseEnter}
+		on:mouseleave={handleMouseLeave}
+		role="region"
+	/>
 </svg>

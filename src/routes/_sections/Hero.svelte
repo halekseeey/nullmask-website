@@ -9,11 +9,12 @@
 	import Rockets from '$Components/AnimatedIcons/PrivacyCards/Rockets/index.svelte'
 	import Keyhole from '$Components/AnimatedIcons/Keyhole/index.svelte'
 	import City from '$Components/AnimatedIcons/City/index.svelte'
+	import Eye from '$Components/AnimatedIcons/Eye/index.svelte'
 </script>
 
 <section
 	id="landing-page"
-	class="bg-light flex h-screen min-h-[600px] w-full items-center justify-center"
+	class="bg-dark flex h-screen min-h-[600px] w-full items-center justify-center"
 >
 	<!-- <Phone />
 	<OneClick />
@@ -24,5 +25,6 @@
 	<Rockets />
 
 	<Keyhole /> -->
-	<City />
+	<!-- <City /> -->
+	<Eye />
 </section>

@@ -54,9 +54,6 @@
 	viewBox="0 0 217 310"
 	fill="none"
 	xmlns="http://www.w3.org/2000/svg"
-	on:mouseenter={handleMouseEnter}
-	on:mouseleave={handleMouseLeave}
-	role="region"
 >
 	<path
 		d="M78.96 281.75L0.25 237.18C0.72 225.19 0.98 218.47 1.45 206.48L83.7 159.84C104.86 159.57 116.72 159.41 137.88 159.14L216.59 203.71C216.12 215.7 215.86 222.42 215.39 234.41L133.13 281.05C111.97 281.32 100.11 281.48 78.95 281.75H78.96Z"
@@ -187,4 +184,13 @@
 	/>
 
 	<Sheeld animationDuration={ANIMATION_DURATION} bind:isAnimating={isHovered} />
+
+	<rect
+		width="206.83"
+		height="294.85"
+		fill="transparent"
+		on:mouseenter={handleMouseEnter}
+		on:mouseleave={handleMouseLeave}
+		role="region"
+	/>
 </svg>

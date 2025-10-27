@@ -87,8 +87,6 @@
 	{y}
 	width="206"
 	height="294"
-	on:mouseenter={handleMouseEnter}
-	on:mouseleave={handleMouseLeave}
 	role="region"
 	viewBox="0 0 217 310"
 	fill="none"
@@ -229,4 +227,13 @@
 	/>
 
 	<Token animationDuration={ANIMATION_DURATION} bind:isAnimating={isHovered} />
+
+	<rect
+		width="217"
+		height="310"
+		fill="transparent"
+		on:mouseenter={handleMouseEnter}
+		on:mouseleave={handleMouseLeave}
+		role="region"
+	/>
 </svg>
