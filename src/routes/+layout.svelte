@@ -9,12 +9,14 @@
 	import { ScrollSmoother } from 'gsap/dist/ScrollSmoother'
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 	import { gsap } from 'gsap'
-
+	import { closeMenu } from '$Stores/menuStore'
 	import { MorphSVGPlugin } from 'gsap/dist/MorphSVGPlugin'
 
 	import Header from '$Layouts/Header.svelte'
 	import NavigationProgressBar from '$UI/NavigationProgressBar.svelte'
-	import { closeMenu } from '$Stores/menuStore'
+
+	import Logo from '$Components/AnimatedIcons/Logo/index.svelte'
+	import Wordmark from '$Components/AnimatedIcons/Wordmark/Wordmark.svelte'
 
 	// import logo from '$Icons/qfLogos/logo-full.svg'
 
@@ -128,7 +130,7 @@
 
 {#if !mounted}
 	<div
-		class="loading-state fixed left-0 top-0 z-[1000000] flex min-h-screen w-full flex-col items-center justify-center gap-10"
+		class="loading-state fixed left-0 top-0 z-[1000000] flex min-h-screen w-full flex-col items-center justify-center gap-4"
 		class:fade-out={fadeOut}
 	>
 		<!-- <video
@@ -145,7 +147,12 @@
 			<source src="/loading.webm" type="video/webm" />
 			<source src="/loading.mp4" type="video/mp4" />
 		</video> -->
-		Loading
+		<Logo className="h-18 w-18 transition-all duration-500 lg:h-20 lg:w-20" theme="dark" />
+
+		<Wordmark
+			className="w-[240px] flex-shrink-0  transition-all duration-500 h-auto object-contain"
+			theme="dark"
+		/>
 	</div>
 {/if}
 
@@ -157,7 +164,7 @@
 
 <style>
 	.loading-state {
-		background: #161616;
+		background: var(--primary-dark);
 		opacity: 1;
 	}
 
