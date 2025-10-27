@@ -3,9 +3,50 @@
 	import Energy from './Energy.svelte'
 	import SheeldsBottom from './SheeldsBottom.svelte'
 	import TokenBottom from './TokenBottom.svelte'
+	import { gsap } from 'gsap'
+	import { onMount } from 'svelte'
+
+	export let className = ''
+	export let viewMode = 0
+
+	let svgRef
+
+	// 4 different viewBox modes
+	// 0: default viewBox (0 0 824 563)
+	// 1: show left part
+	// 2: show center part
+	// 3: show right part
+	const viewBoxes = [
+		{ x: 0, y: 0, width: 824, height: 563 }, // default - full view
+		{ x: 0, y: 0, width: 290, height: 380 }, // left part
+		{ x: 182, y: 140, width: 320, height: 440 }, // center part
+		{ x: 454, y: -50, width: 370, height: 490 } // right part
+	]
+
+	$: {
+		if (svgRef) {
+			const targetViewBox = viewBoxes[viewMode]
+			gsap.to(svgRef, {
+				duration: 0.6,
+				ease: 'power2.inOut',
+				attr: {
+					viewBox: `${targetViewBox.x} ${targetViewBox.y} ${targetViewBox.width} ${targetViewBox.height}`
+				}
+			})
+		}
+	}
 </script>
 
-<svg width="824" height="563" viewBox="0 0 824 563" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg
+	bind:this={svgRef}
+	width="824"
+	height="563"
+	viewBox="0 0 824 563"
+	fill="none"
+	class={className}
+	xmlns="http://www.w3.org/2000/svg"
+	preserveAspectRatio="xMaxYMid meet"
+>
 	<TokenBottom x={0} y={0} />
 
 	<BoxesBottom x={242.52} y={142.27} />

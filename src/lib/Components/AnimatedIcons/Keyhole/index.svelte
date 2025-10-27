@@ -2,6 +2,8 @@
 	import { gsap } from 'gsap'
 	import { onMount } from 'svelte'
 
+	export let className = ''
+
 	import FoxFace from './FoxFace.svelte'
 
 	const INITIAL_DELAY = 1
@@ -129,7 +131,15 @@
 	})
 </script>
 
-<svg width="198" height="320" viewBox="0 0 198 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg
+	width="198"
+	height="320"
+	viewBox="0 0 198 320"
+	fill="none"
+	xmlns="http://www.w3.org/2000/svg"
+	class={className}
+	preserveAspectRatio="xMidYMid meet"
+>
 	<mask
 		id="mask0_3142_10378"
 		style="mask-type:alpha"

@@ -1,30 +1,31 @@
 <script>
-	import Button from '$Components/AnimatedIcons/OneClick/Button.svelte'
 	import OneClick from '$Components/AnimatedIcons/OneClick/index.svelte'
-	import Phone from '$Components/AnimatedIcons/Phone/index.svelte'
-	import Wallet from '$Components/AnimatedIcons/PrivacyCards/Wallet/index.svelte'
-	import Tokens from '$Components/AnimatedIcons/PrivacyCards/Tokens/index.svelte'
-	import PhoneCard from '$Components/AnimatedIcons/PrivacyCards/Phone/index.svelte'
-	import Funds from '$Components/AnimatedIcons/PrivacyCards/Funds/index.svelte'
-	import Rockets from '$Components/AnimatedIcons/PrivacyCards/Rockets/index.svelte'
-	import Keyhole from '$Components/AnimatedIcons/Keyhole/index.svelte'
-	import City from '$Components/AnimatedIcons/City/index.svelte'
-	import Eye from '$Components/AnimatedIcons/Eye/index.svelte'
+	import { mediaQuery } from '$lib/Stores/mediaQuery'
+	import { HEADER } from '$lib/const'
+	import { cn } from '$utils'
+
+	export let className = ''
 </script>
 
-<section
-	id="landing-page"
-	class="bg-dark flex h-screen min-h-[600px] w-full items-center justify-center"
->
-	<!-- <Phone />
-	<OneClick />
-	<Wallet />
-	<Tokens />
-	<PhoneCard />
-	<Funds />
-	<Rockets />
+<section id="landing-page" class={cn('bg-light h-screen min-h-[600px] w-full', className)}>
+	<div
+		class="relative mx-auto flex h-full max-w-[1440px] items-center"
+		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"
+	>
+		<div class="absolute h-full w-[605px] md:right-4 lg:right-10 xl:right-24">
+			<OneClick className="h-full w-full object-contain" />
+		</div>
+		<div class="relative z-[1] flex flex-col md:ml-10 lg:ml-16 xl:ml-32">
+			<h1 class="mb-8 text-[80px] leading-[1.1]">
+				One Click. <br />
+				Total Privacy.
+			</h1>
 
-	<Keyhole /> -->
-	<!-- <City /> -->
-	<Eye />
+			<p class="mb-8 text-3xl uppercase">Web3's First Wallet VPN</p>
+
+			<button class="bg-green mb-20 w-fit rounded-[10px] px-4 py-2 text-2xl font-[300]">
+				Be the first to know
+			</button>
+		</div>
+	</div>
 </section>

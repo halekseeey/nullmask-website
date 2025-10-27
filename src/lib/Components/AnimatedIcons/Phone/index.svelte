@@ -5,7 +5,9 @@
 	import FirstScreen from './FirstScreen.svelte'
 	import SecondScreen from './SecondScreen.svelte'
 	import { gsap } from 'gsap'
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
+
+	export let className = ''
 
 	const INITIAL_DELAY = 1
 	const FINGER_MOVEMENT = 1
@@ -16,7 +18,7 @@
 	const CONNECTING_VIEW = 2
 
 	let fingerRef
-	let firstScreen
+	// let firstScreen
 	let secondScreen
 	let isAnimating = false
 
@@ -28,17 +30,20 @@
 
 	let completeScreenRef
 
+	let animations = []
+
+	// Export startAnimation to parent component
 	function startAnimation() {
 		if (isAnimating) return
 		isAnimating = true
 
 		// Show FirstScreen for delay seconds
-		gsap.set(firstScreen, { opacity: 1 })
+		// gsap.set(firstScreen, { opacity: 1 })
 
 		// After delay, move finger to coordinates (373.06, 402.17)
-		gsap.delayedCall(INITIAL_DELAY, () => {
+		const delayedCall = gsap.delayedCall(INITIAL_DELAY, () => {
 			// First: move to coordinates only
-			gsap.to(fingerRef, {
+			const fingerAnim = gsap.to(fingerRef, {
 				duration: FINGER_MOVEMENT,
 				ease: 'power2.inOut',
 				attr: {
@@ -49,11 +54,13 @@
 					firstScreenClick()
 				}
 			})
+			animations.push(fingerAnim)
 		})
+		animations.push(delayedCall)
 	}
 
 	function firstScreenClick() {
-		gsap.to(fingerRef, {
+		const clickAnim = gsap.to(fingerRef, {
 			duration: FINGER_CLICK,
 			yoyo: true,
 			repeat: 1,
@@ -69,28 +76,32 @@
 				FirstToSecondScreenTransition()
 			}
 		})
+		animations.push(clickAnim)
 
-		gsap.delayedCall(FINGER_CLICK / 2, () => {
-			gsap.to(firstScreenButton, {
+		const delayedCall = gsap.delayedCall(FINGER_CLICK / 2, () => {
+			const buttonAnim = gsap.to(firstScreenButton, {
 				duration: FINGER_CLICK / 2,
 				ease: 'power2.inOut',
 				attr: {
 					fill: '#D9D9D9'
 				}
 			})
+			animations.push(buttonAnim)
 
-			gsap.to(firstScreenButtonLabel, {
+			const labelAnim = gsap.to(firstScreenButtonLabel, {
 				duration: FINGER_CLICK / 2,
 				ease: 'power2.inOut',
 				attr: {
 					fill: '#202221'
 				}
 			})
+			animations.push(labelAnim)
 		})
+		animations.push(delayedCall)
 	}
 
 	function FirstToSecondScreenTransition() {
-		gsap.to(firstScreenRef, {
+		const firstScreenAnim = gsap.to(firstScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
@@ -98,23 +109,26 @@
 			},
 
 			onComplete: () => {
-				gsap.delayedCall(SCREEN_VIEW, () => {
+				const delayedCall = gsap.delayedCall(SCREEN_VIEW, () => {
 					secondScreenClick()
 				})
+				animations.push(delayedCall)
 			}
 		})
+		animations.push(firstScreenAnim)
 
-		gsap.to(secondScreenRef, {
+		const secondScreenAnim = gsap.to(secondScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
 				x: 238.22
 			}
 		})
+		animations.push(secondScreenAnim)
 	}
 
 	function secondScreenClick() {
-		gsap.to(fingerRef, {
+		const clickAnim = gsap.to(fingerRef, {
 			duration: FINGER_CLICK,
 			yoyo: true,
 			repeat: 1,
@@ -130,28 +144,32 @@
 				SecondToConnectingScreenTransition()
 			}
 		})
+		animations.push(clickAnim)
 
-		gsap.delayedCall(FINGER_CLICK / 2, () => {
-			gsap.to(secondScreenButton, {
+		const delayedCall = gsap.delayedCall(FINGER_CLICK / 2, () => {
+			const buttonAnim = gsap.to(secondScreenButton, {
 				duration: FINGER_CLICK / 2,
 				ease: 'power2.inOut',
 				attr: {
 					fill: '#D9D9D9'
 				}
 			})
+			animations.push(buttonAnim)
 
-			gsap.to(secondScreenButtonLabel, {
+			const labelAnim = gsap.to(secondScreenButtonLabel, {
 				duration: FINGER_CLICK / 2,
 				ease: 'power2.inOut',
 				attr: {
 					fill: '#202221'
 				}
 			})
+			animations.push(labelAnim)
 		})
+		animations.push(delayedCall)
 	}
 
 	function SecondToConnectingScreenTransition() {
-		gsap.to(secondScreenRef, {
+		const secondScreenAnim = gsap.to(secondScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
@@ -159,21 +177,24 @@
 			},
 
 			onComplete: () => {
-				gsap.delayedCall(CONNECTING_VIEW, () => {
+				const delayedCall = gsap.delayedCall(CONNECTING_VIEW, () => {
 					ConnectingToCompleteScreenTransition()
 				})
+				animations.push(delayedCall)
 			}
 		})
+		animations.push(secondScreenAnim)
 
-		gsap.to(connectingScreenRef, {
+		const connectingScreenAnim = gsap.to(connectingScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
 				x: 238.22
 			}
 		})
+		animations.push(connectingScreenAnim)
 
-		gsap.to(fingerRef, {
+		const fingerAnim = gsap.to(fingerRef, {
 			duration: FINGER_MOVEMENT,
 			ease: 'power2.inOut',
 
@@ -182,18 +203,20 @@
 				y: 905.99
 			}
 		})
+		animations.push(fingerAnim)
 	}
 
 	function ConnectingToCompleteScreenTransition() {
-		gsap.to(connectingScreenRef, {
+		const connectingScreenAnim = gsap.to(connectingScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
 				x: 238.22 - MOVEMNET_X
 			}
 		})
+		animations.push(connectingScreenAnim)
 
-		gsap.to(completeScreenRef, {
+		const completeScreenAnim = gsap.to(completeScreenRef, {
 			duration: SCREENS_TRANSITION,
 			ease: 'power2.inOut',
 			attr: {
@@ -204,8 +227,9 @@
 				isAnimating = false
 			}
 		})
+		animations.push(completeScreenAnim)
 
-		gsap.to(fingerRef, {
+		const fingerAnim = gsap.to(fingerRef, {
 			duration: FINGER_MOVEMENT,
 			ease: 'power2.inOut',
 
@@ -214,6 +238,7 @@
 				y: 905.99
 			}
 		})
+		animations.push(fingerAnim)
 	}
 
 	function resetAnimation() {
@@ -248,7 +273,20 @@
 		}
 	}
 
-	function handleClick() {
+	export function hardReset() {
+		// Kill all animations from array
+		animations.forEach((anim) => anim.kill())
+		animations = []
+
+		// Reset to initial state
+		isAnimating = false
+		resetAnimation()
+
+		// Start animation immediately
+		startAnimation()
+	}
+
+	export function handleClick() {
 		if (!isAnimating) {
 			resetAnimation()
 			startAnimation()
@@ -257,7 +295,7 @@
 
 	onMount(() => {
 		// Set initial state
-		gsap.set(firstScreen, { opacity: 1 })
+
 		gsap.set(fingerRef, {
 			attr: {
 				x: 505,
@@ -265,8 +303,16 @@
 			}
 		})
 
-		// Start animation sequence
-		startAnimation()
+		// Start animation sequence after a short delay
+		setTimeout(() => {
+			startAnimation()
+		}, 500)
+	})
+
+	onDestroy(() => {
+		// Kill all animations when component is destroyed
+		animations.forEach((anim) => anim.kill())
+		animations = []
 	})
 </script>
 
@@ -278,9 +324,10 @@
 	xmlns="http://www.w3.org/2000/svg"
 	on:click={handleClick}
 	on:keydown={(e) => e.key === 'Enter' && handleClick()}
-	style="cursor: {isAnimating ? 'default' : 'pointer'}; outline: none;"
+	style="cursor: default; outline: none;"
 	role="button"
 	tabindex="0"
+	class={className}
 	aria-label="Interactive phone animation"
 >
 	<g clip-path="url(#clip0_3115_7837)">
@@ -371,7 +418,10 @@
 			stroke-miterlimit="10"
 		/>
 
-		<g clip-path="url(#clip1_3115_7837)">
+		<g
+			clip-path="url(#clip1_3115_7837)"
+			style="cursor: {isAnimating ? 'default' : 'pointer'}; outline: none;"
+		>
 			<rect width="200.052" y={185.04} x={238.22} height="373" rx="23" fill="#202221" />
 			<FirstScreen
 				x={238.22}

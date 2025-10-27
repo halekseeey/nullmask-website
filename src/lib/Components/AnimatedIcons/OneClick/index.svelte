@@ -99,7 +99,7 @@
 	viewBox="0 0 606 600"
 	fill="none"
 	class={className}
-	preserveAspectRatio="xMidYMid slice"
+	preserveAspectRatio="xMidYMid meet"
 >
 	<circle cx="258.407" cy="244.152" r="167.88" fill="url(#pattern0_3094_4332)" />
 	<path

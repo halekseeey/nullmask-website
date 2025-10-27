@@ -1,5 +1,31 @@
 <script>
+	import { gsap } from 'gsap'
+	import { onMount } from 'svelte'
+
 	export let className = ''
+	export let viewMode = 0
+
+	let svgRef
+
+	// Different viewBox modes
+	const viewBoxes = [
+		{ x: 0, y: 0, width: 436, height: 536 }, //default
+		{ x: 50, y: 100, width: 386, height: 436 }, // default - full view
+		{ x: 0, y: 0, width: 536, height: 636 } // left part
+	]
+
+	$: {
+		if (svgRef) {
+			const targetViewBox = viewBoxes[viewMode]
+			gsap.to(svgRef, {
+				duration: 0.6,
+				ease: 'power2.inOut',
+				attr: {
+					viewBox: `${targetViewBox.x} ${targetViewBox.y} ${targetViewBox.width} ${targetViewBox.height}`
+				}
+			})
+		}
+	}
 
 	import Eye from './EyeBase.svelte'
 	import EyeBoth from './EyeBoth.svelte'
@@ -7,6 +33,7 @@
 </script>
 
 <svg
+	bind:this={svgRef}
 	width="436"
 	height="536"
 	viewBox="0 0 436 536"

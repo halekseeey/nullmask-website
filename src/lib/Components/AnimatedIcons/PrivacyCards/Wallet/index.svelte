@@ -5,6 +5,9 @@
 	import Star from '../Star.svelte'
 	import { gsap } from 'gsap'
 	import { onMount } from 'svelte'
+	import { cn } from '$utils'
+
+	export let className = ''
 
 	let cardRef
 	let starRef1
@@ -13,6 +16,9 @@
 	let isHovered = false
 	let text1Ref
 	let text2Ref
+	let textContainerRef
+	let minHeight = 'auto'
+	let cardMinHeight = 'auto'
 
 	// Animation duration constant
 	const ANIMATION_DURATION = 0.5
@@ -22,7 +28,35 @@
 		if (text2Ref) {
 			gsap.set(text2Ref, { opacity: 0 })
 		}
+
+		// Delay initial height calculation to allow DOM to render
+		setTimeout(() => {
+			updateMinHeight()
+		}, 100)
+
+		// Listen for resize events to recalculate heights
+		window.addEventListener('resize', updateMinHeight)
+
+		return () => {
+			window.removeEventListener('resize', updateMinHeight)
+		}
 	})
+
+	$: if (text1Ref && text2Ref) {
+		updateMinHeight()
+	}
+
+	function updateMinHeight() {
+		if (text1Ref && text2Ref && cardRef) {
+			const height1 = text1Ref.offsetHeight
+			const height2 = text2Ref.offsetHeight
+			const maxHeight = Math.max(height1, height2)
+			minHeight = `${maxHeight}px`
+
+			const svgHeight = cardRef.querySelector('svg')?.offsetHeight || 0
+			cardMinHeight = `${svgHeight + maxHeight + 32}px`
+		}
+	}
 
 	function handleMouseEnter() {
 		isHovered = true
@@ -101,11 +135,15 @@
 </script>
 
 <div
-	class="bg-light border-dark relative aspect-[263/349] w-[263px] rounded-[10px] border duration-300"
+	class={cn(
+		'bg-light border-dark relative w-[263px] rounded-[10px] border duration-300',
+		className
+	)}
 	bind:this={cardRef}
 	on:mouseenter={handleMouseEnter}
 	on:mouseleave={handleMouseLeave}
 	role="region"
+	style="min-height: {cardMinHeight};"
 >
 	<svg
 		viewBox="0 -40 164 250"
@@ -145,11 +183,18 @@
 		<FirstPart />
 	</svg>
 
-	<div class="relative mb-4 mt-4 w-fit px-3 text-lg leading-[1] lg:px-4 lg:text-2xl xl:mt-8">
+	<div
+		bind:this={textContainerRef}
+		class="relative mb-4 mt-4 w-fit px-3 text-lg leading-[1] lg:px-4 lg:text-2xl xl:mt-8"
+		style="min-height: {minHeight};"
+	>
 		<div bind:this={text1Ref} class="text-dark w-full font-medium">
 			Works with your existing wallet.
 		</div>
-		<div bind:this={text2Ref} class="text-dark absolute top-0 font-medium opacity-0">
+		<div
+			bind:this={text2Ref}
+			class="text-dark absolute left-0 top-0 px-3 font-medium opacity-0 lg:px-4"
+		>
 			No new seed phrases, no new accounts.
 		</div>
 	</div>

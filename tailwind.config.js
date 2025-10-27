@@ -8,7 +8,9 @@ export default {
 				xs: '400px',
 				s: '550px'
 			},
-			fontFamily: {},
+			fontFamily: {
+				poppins: ['Poppins', 'sans-serif']
+			},
 			fontSize: {
 				'2xs': '0.625rem', // 10px
 				'3xs': '0.5rem', // 8px

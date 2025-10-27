@@ -1,63 +1,22 @@
 <script>
 	import { fade, fly } from 'svelte/transition'
-	import { onMount } from 'svelte'
 
-	// import Wordmark from '$Components/Icons/Wordmark.svelte'
-	// import ThemeToggle from '$Components/AnimatedIcons/ThemeToggle'
 	import { mediaQuery } from '$Stores/mediaQuery'
 	import MenuToggle from '$Components/AnimatedIcons/MenuToggle/MenuToggle.svelte'
 	import { isMenuOpen, toggleMenu } from '$Stores/menuStore'
-	// import Logo from '$Components/Icons/Logo.svelte'
+
 	import { HEADER } from '$lib/const'
-
-	let headerWidth = '100%'
-	let headerLeft = '0px'
-	let updateWidthRetryTimer = null
-
-	const updateHeaderWidth = () => {
-		const contentWrapper = document.querySelector('.content-div')
-		if (contentWrapper) {
-			const rect = contentWrapper.getBoundingClientRect()
-			headerWidth = `${rect.width}px`
-			headerLeft = `${rect.left}px`
-			if (updateWidthRetryTimer) {
-				clearTimeout(updateWidthRetryTimer)
-				updateWidthRetryTimer = null
-			}
-		} else {
-			if (!updateWidthRetryTimer) {
-				updateWidthRetryTimer = setTimeout(() => {
-					updateHeaderWidth()
-				}, 100)
-			}
-		}
-	}
-
-	onMount(() => {
-		setTimeout(() => {
-			updateHeaderWidth()
-		}, 250)
-
-		window.addEventListener('resize', updateHeaderWidth)
-
-		return () => {
-			window.removeEventListener('resize', updateHeaderWidth)
-			if (updateWidthRetryTimer) {
-				clearTimeout(updateWidthRetryTimer)
-				updateWidthRetryTimer = null
-			}
-		}
-	})
 </script>
 
 <header
 	class="fixed top-0 z-[10001] px-4 pt-4"
-	style=" background-color: var(--border-color); height: {$mediaQuery.md
+	style="height: {$mediaQuery.md
 		? HEADER.height.desktop
-		: HEADER.height.mobile}px; width: {headerWidth}; left: {headerLeft}"
+		: HEADER.height
+				.mobile}px; max-width: 1440px; left: 50%; transform: translateX(-50%); width: 100%;"
 >
 	<div
-		class="border-border grid h-full grid-cols-[76px_minmax(0,auto)_65px] border md:grid-cols-[76px_minmax(0,auto)_88px] lg:grid-cols-[90px_1fr_auto_90px]"
+		class="border-border bg-dark grid h-full grid-cols-[76px_minmax(0,auto)_65px] border md:grid-cols-[76px_minmax(0,auto)_88px] lg:grid-cols-[90px_1fr_auto_90px]"
 	>
 		<div
 			class="border-border relative flex h-full w-[76px] items-center justify-center border-r lg:w-[90px]"
@@ -156,7 +115,8 @@
 		class=" fixed bottom-0 z-[10000] flex flex-col px-4"
 		style="top: {$mediaQuery.md
 			? HEADER.height.desktop
-			: HEADER.height.mobile}px; width: {headerWidth}; left: {headerLeft}"
+			: HEADER.height
+					.mobile}px; max-width: 1440px; left: 50%; transform: translateX(-50%); width: 100%;"
 	>
 		<div
 			class="absolute inset-0"
