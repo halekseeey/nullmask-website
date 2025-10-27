@@ -10,7 +10,12 @@
 	$: viewMode = $mediaQuery.lg ? 0 : 0
 </script>
 
-<section id="landing-page" class={cn('bg-dark h-screen min-h-[600px] w-full', className)}>
+<section
+	data-section="eyes"
+	data-theme="dark"
+	id="landing-page"
+	class={cn('bg-dark h-screen min-h-[600px] w-full', className)}
+>
 	<div class="relative mx-auto flex h-full max-w-[1440px] items-center gap-4">
 		<div class="relative h-full w-[50%] flex-shrink-0">
 			<Eye className="h-full w-full object-contain -translate-x-[50px]" {viewMode} />
@@ -31,13 +36,13 @@
 
 			<div class="mt-10 grid grid-cols-2 gap-3 text-xl xl:text-2xl">
 				<button
-					class="border-light bg-dark text-light hover:bg-green hover:border-green hover:text-dark rounded-[10px] border py-1 transition-all duration-300"
+					class="border-light bg-dark text-light hover:bg-green hover:border-green hover:text-dark rounded-[10px] border py-1.5 transition-all duration-300"
 				>
 					Join Our Community
 				</button>
 
 				<button
-					class="border-light bg-light text-dark hover:bg-green hover:text-dark hover:border-green rounded-[10px] border py-1 transition-all transition-all duration-300 duration-300"
+					class="border-light bg-light text-dark hover:bg-dark hover:text-green hover:border-green rounded-[10px] border py-1.5 transition-all transition-all duration-300 duration-300"
 				>
 					Business Inquiries
 				</button>

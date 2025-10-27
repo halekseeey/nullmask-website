@@ -50,7 +50,12 @@
 	}
 </script>
 
-<section id="landing-page" class={cn('bg-light h-screen min-h-[600px] w-full', className)}>
+<section
+	data-section="city"
+	data-theme="light"
+	id="landing-page"
+	class={cn('bg-light h-screen min-h-[600px] w-full', className)}
+>
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] items-center gap-12"
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"

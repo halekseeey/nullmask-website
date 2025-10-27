@@ -104,7 +104,7 @@ export function initSnapScroll(container) {
 		}
 
 		// Very sensitive threshold for better UX - responds to small movements
-		const threshold = 10
+		const threshold = 20
 
 		// Determine scroll direction
 		if (deltaY > threshold && currentIndex < sections.length - 1) {

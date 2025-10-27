@@ -21,7 +21,6 @@
 					entries.forEach((entry) => {
 						// Only trigger when section becomes visible, not when it stays visible
 						if (entry.isIntersecting && !lastIntersectionState && phoneRef) {
-							console.log('here')
 							phoneRef.hardReset()
 						}
 						lastIntersectionState = entry.isIntersecting
@@ -58,6 +57,8 @@
 
 <section
 	bind:this={sectionElement}
+	data-section="phone"
+	data-theme="light"
 	id="landing-page"
 	class={cn('bg-light h-screen min-h-[600px] w-full overflow-hidden', className)}
 	on:click={handleSectionClick}

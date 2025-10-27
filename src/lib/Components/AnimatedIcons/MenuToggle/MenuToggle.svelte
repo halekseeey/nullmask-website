@@ -4,6 +4,7 @@
 	import { isMenuOpen, toggleMenu as toggleMenuStore } from '$lib/Stores/menuStore.js'
 
 	export let className = ''
+	export let theme = 'light' // 'light' or 'dark'
 
 	const dispatch = createEventDispatcher()
 
@@ -103,7 +104,9 @@
 		<!-- Top line -->
 		<path
 			d={openPaths[0]}
-			stroke="var(--line-color, #D9D9D9)"
+			class="stroke-line transition-colors duration-500"
+			class:stroke-light={theme === 'dark'}
+			class:stroke-dark={theme === 'light'}
 			stroke-width="4"
 			stroke-linecap="round"
 			bind:this={pathRefs[0]}
@@ -112,7 +115,9 @@
 		<!-- Middle line -->
 		<path
 			d={openPaths[1]}
-			stroke="var(--line-color, #D9D9D9)"
+			class="stroke-line transition-colors duration-500"
+			class:stroke-light={theme === 'dark'}
+			class:stroke-dark={theme === 'light'}
 			stroke-width="4"
 			stroke-linecap="round"
 			bind:this={pathRefs[1]}
@@ -121,10 +126,22 @@
 		<!-- Bottom line -->
 		<path
 			d={openPaths[2]}
-			stroke="var(--line-color, #D9D9D9)"
+			class="stroke-line transition-colors duration-500"
+			class:stroke-light={theme === 'dark'}
+			class:stroke-dark={theme === 'light'}
 			stroke-width="4"
 			stroke-linecap="round"
 			bind:this={pathRefs[2]}
 		/>
 	</svg>
 </button>
+
+<style>
+	:global(.stroke-light) {
+		stroke: #d9d9d9;
+	}
+
+	:global(.stroke-dark) {
+		stroke: #202221;
+	}
+</style>

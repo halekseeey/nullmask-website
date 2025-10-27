@@ -20,7 +20,12 @@
 	]
 </script>
 
-<section id="landing-page" class={cn('bg-dark h-screen min-h-[600px] w-full', className)}>
+<section
+	data-section="carousel"
+	data-theme="dark"
+	id="landing-page"
+	class={cn('bg-dark h-screen min-h-[600px] w-full', className)}
+>
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] flex-col justify-center"
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"

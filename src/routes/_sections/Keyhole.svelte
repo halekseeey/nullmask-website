@@ -7,7 +7,12 @@
 	export let className = ''
 </script>
 
-<section id="landing-page" class={cn('bg-light h-screen min-h-[600px] w-full', className)}>
+<section
+	data-section="keyhole"
+	data-theme="light"
+	id="landing-page"
+	class={cn('bg-light h-screen min-h-[600px] w-full', className)}
+>
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] items-center"
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"
