@@ -67,15 +67,12 @@
 </script>
 
 <div bind:this={scrollContainer} id="main" class="snap-scroll">
-	<!-- <Hero /> -->
-	<!-- <Keyhole /> -->
-
-	<!-- <Carousel /> -->
-	<!-- <Phone /> -->
-	<City />
+	<Hero />
+	<Keyhole />
+	<Carousel />
 	<Phone />
-
-	<!-- <Eyes /> -->
+	<City />
+	<Eyes />
 </div>
 
 <style>

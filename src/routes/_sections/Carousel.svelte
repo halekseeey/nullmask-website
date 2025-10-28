@@ -264,7 +264,7 @@
 	data-section="carousel"
 	data-theme="dark"
 	id="landing-page"
-	class={cn('bg-dark h-screen min-h-[600px] w-full', className)}
+	class={cn('bg-dark h-screen min-h-[600px] w-full overflow-hidden', className)}
 >
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] flex-col justify-center"

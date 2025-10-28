@@ -43,6 +43,20 @@
 		}
 	}
 
+	function hoverEnter(targetPosition) {
+		if (!block1 || !block2 || !block3) return
+		if (activePosition === targetPosition) return
+		const target = targetPosition === 1 ? block1 : targetPosition === 2 ? block2 : block3
+		gsap.to(target, { duration: 0.2, attr: { fill: '#CDEF33' }, ease: 'power2.out' })
+	}
+
+	function hoverLeave(targetPosition) {
+		if (!block1 || !block2 || !block3) return
+		if (activePosition === targetPosition) return
+		const target = targetPosition === 1 ? block1 : targetPosition === 2 ? block2 : block3
+		gsap.to(target, { duration: 0.2, attr: { fill: '#D9D9D9' }, ease: 'power2.out' })
+	}
+
 	onMount(() => {
 		updatePosition()
 	})
@@ -74,6 +88,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(2)}
+			on:mouseenter={() => hoverEnter(2)}
+			on:mouseleave={() => hoverLeave(2)}
 		/>
 		<rect
 			x="52"
@@ -83,6 +99,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(3)}
+			on:mouseenter={() => hoverEnter(3)}
+			on:mouseleave={() => hoverLeave(3)}
 		/>
 	{:else if activePosition === 2}
 		<!-- Active is block2, add larger areas for block1 and block3 -->
@@ -94,6 +112,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(1)}
+			on:mouseenter={() => hoverEnter(1)}
+			on:mouseleave={() => hoverLeave(1)}
 		/>
 		<rect
 			x="52"
@@ -103,6 +123,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(3)}
+			on:mouseenter={() => hoverEnter(3)}
+			on:mouseleave={() => hoverLeave(3)}
 		/>
 	{:else if activePosition === 3}
 		<!-- Active is block3, add larger areas for block1 and block2 -->
@@ -114,6 +136,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(1)}
+			on:mouseenter={() => hoverEnter(1)}
+			on:mouseleave={() => hoverLeave(1)}
 		/>
 		<rect
 			x="20"
@@ -123,6 +147,8 @@
 			fill="transparent"
 			style="cursor: pointer;"
 			on:click={() => handleBlockClick(2)}
+			on:mouseenter={() => hoverEnter(2)}
+			on:mouseleave={() => hoverLeave(2)}
 		/>
 	{/if}
 </svg>
