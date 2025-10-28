@@ -186,7 +186,7 @@
 
 	<div
 		bind:this={textContainerRef}
-		class="relative mb-4 mt-4 w-fit px-3 text-lg leading-[1] lg:px-4 lg:text-2xl xl:mt-8"
+		class="relative my-8 w-fit px-4 text-2xl leading-[1] lg:px-3 lg:text-xl xl:mt-8 xl:px-4 xl:text-2xl"
 		style="min-height: {minHeight};"
 	>
 		<div bind:this={text1Ref} class="text-dark w-full font-medium">

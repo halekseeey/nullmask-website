@@ -180,7 +180,7 @@
 		<Phone animationDuration={ANIMATION_DURATION} bind:isAnimating={isHovered} />
 	</svg>
 	<div
-		class="relative mb-4 mt-4 min-h-[3lh] w-fit px-3 text-lg leading-[1] lg:px-4 lg:text-2xl xl:mt-8"
+		class="relative my-8 w-fit px-4 text-2xl leading-[1] lg:px-3 lg:text-xl xl:mt-8 xl:px-4 xl:text-2xl"
 	>
 		<div bind:this={text1Ref} class="text-dark w-full font-medium">
 			Runs invisibly in the background.
