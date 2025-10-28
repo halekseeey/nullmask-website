@@ -82,7 +82,7 @@
 		</div>
 
 		<div
-			class="s:-mb-10 -mb-6 flex-grow md:absolute md:-left-20 md:h-full md:w-[1094px] lg:left-10 xl:left-24"
+			class="-mb-10 flex-grow md:absolute md:-left-20 md:h-full md:w-[1094px] lg:left-10 xl:left-24"
 			style="top: {$mediaQuery.md
 				? HEADER.height.desktop
 				: HEADER.height.mobile}px; rotate: -11.81deg; {$mediaQuery.md ? '' : 'transform-origin'}"
