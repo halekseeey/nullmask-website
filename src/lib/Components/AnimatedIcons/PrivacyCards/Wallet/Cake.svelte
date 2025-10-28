@@ -63,6 +63,11 @@
 		}
 	]
 
+	const positionData = {
+		from: { x: 40.39, y: 70.43 },
+		to: { x: 25.52, y: -18.78 }
+	}
+
 	function startAnimations() {
 		// Clear existing animations
 		animations.forEach((anim) => anim.kill())
@@ -103,13 +108,14 @@
 			}
 		})
 
-		// Animate SVG position
+		// Define position animation data
+
+		// Animate SVG position using attributes
 		if (svgRef) {
 			const anim = gsap.to(svgRef, {
 				duration: animationDuration,
 				ease: 'power2.inOut',
-				x: 0.32,
-				y: -110
+				attr: positionData.to
 			})
 			animations.push(anim)
 		}
@@ -155,13 +161,12 @@
 			}
 		})
 
-		// Animate SVG position back
+		// Animate SVG position back using attributes
 		if (svgRef) {
 			const anim = gsap.to(svgRef, {
 				duration: animationDuration,
 				ease: 'power2.inOut',
-				x: 0,
-				y: 0
+				attr: positionData.from
 			})
 			animations.push(anim)
 		}
