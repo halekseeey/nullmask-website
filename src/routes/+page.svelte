@@ -89,4 +89,10 @@
 		scroll-snap-align: start;
 		scroll-snap-stop: always;
 	}
+
+	@supports (height: 100svh) {
+		:global(#main > section) {
+			height: 100svh;
+		}
+	}
 </style>
