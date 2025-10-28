@@ -300,7 +300,7 @@
 			class="border-light scrollbar-top mx-auto mt-8 flex w-fit justify-center rounded-[20px] border px-3 py-2 lg:z-[-1]"
 		>
 			<div
-				class="slider-buttons relative flex items-center gap-2"
+				class="slider-buttons relative flex w-[91px] items-center justify-between"
 				bind:this={sliderButtonsContainer}
 			>
 				<!-- Active merged bar -->
