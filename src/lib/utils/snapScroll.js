@@ -1,218 +1,162 @@
 /**
- * Snap scroll utility for smooth section transitions
- * Based on the concept from the provided code
+ * Snap scroll logic from Hyperframe example
+ * Controls scroll-snap-type based on scroll position
  */
 
-export function initSnapScroll(container) {
-	if (!container) return
+export function initSnapScrollHyperframe(mainElement) {
+	if (!mainElement) return
 
-	let isScrolling = false
-	let currentSection = 0
-	let sections = []
-	let touchStartY = 0
-	let touchEndY = 0
+	let isSnapping = false
+	let snapLockTimeout = null
 
-	// Get all sections with h-screen class
-	function updateSections() {
-		sections = Array.from(container.querySelectorAll('section'))
-	}
+	// Check if browser is Chrome
+	const isChrome =
+		window.chrome &&
+		window.navigator.vendor === 'Google Inc.' &&
+		!window.opr &&
+		window.navigator.userAgent.indexOf('Edge') === -1
 
-	// Get section by index
-	function getSectionByIndex(index) {
-		return sections[index]
-	}
+	// Check if browser supports scrollBehavior
+	const supportsScrollBehavior = 'scrollBehavior' in document.documentElement.style
 
-	// Scroll to section with smooth animation
-	function scrollToSection(index, smooth = true) {
-		if (isScrolling || index < 0 || index >= sections.length) return
+	// Enable or disable scroll snap
+	const toggleSnap = (enable) => {
+		if (enable) {
+			mainElement.style.scrollSnapType = 'y mandatory'
 
-		const section = sections[index]
-		if (!section) return
+			// Chrome/Edge specific workaround
+			if (!supportsScrollBehavior) {
+				let attempts = 5
+				const currentScroll = mainElement.scrollTop
+				mainElement.scrollTop = currentScroll
 
-		isScrolling = true
-		currentSection = index
-
-		const startPosition = container.scrollTop
-		const targetPosition = section.offsetTop
-		const distance = targetPosition - startPosition
-		const duration = smooth ? 600 : 0
-		const startTime = performance.now()
-
-		function animateScroll(currentTime) {
-			const elapsed = currentTime - startTime
-			const progress = Math.min(elapsed / duration, 1)
-
-			// Easing function for smooth animation
-			const easeInOutCubic =
-				progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2
-
-			container.scrollTop = startPosition + distance * easeInOutCubic
-
-			if (progress < 1) {
-				requestAnimationFrame(animateScroll)
-			} else {
-				isScrolling = false
+				const fixScroll = () => {
+					attempts -= 1
+					mainElement.scrollTop = currentScroll
+					if (attempts > 0) {
+						requestAnimationFrame(fixScroll)
+					}
+				}
+				requestAnimationFrame(fixScroll)
 			}
-		}
-
-		if (smooth && duration > 0) {
-			requestAnimationFrame(animateScroll)
 		} else {
-			container.scrollTop = targetPosition
-			isScrolling = false
+			mainElement.style.scrollSnapType = 'none'
 		}
 	}
 
-	// Get current section index based on scroll position
-	function getCurrentSectionIndex() {
-		const scrollPosition = container.scrollTop
-		const viewportCenter = scrollPosition + window.innerHeight / 2
+	// Debounce function
+	const debounce = (func, wait, immediate) => {
+		let timeout
+		return function executedFunction(...args) {
+			const later = () => {
+				timeout = null
+				if (!immediate) func(...args)
+			}
+			const callNow = immediate && !timeout
+			clearTimeout(timeout)
+			timeout = setTimeout(later, wait)
+			if (callNow) func(...args)
+		}
+	}
 
-		let currentIndex = 0
-		let minDistance = Infinity
+	// Function to toggle snap with debounce
+	const toggleSnapDebounced = debounce(
+		(enable) => {
+			isSnapping = enable
+			toggleSnap(enable)
+		},
+		100,
+		true
+	)
 
-		for (let i = 0; i < sections.length; i++) {
-			const section = sections[i]
-			const sectionTop = section.offsetTop
-			const sectionCenter = sectionTop + section.offsetHeight / 2
-			const distance = Math.abs(viewportCenter - sectionCenter)
+	// Handle wheel events (Chrome/Edge specific behavior)
+	if (isChrome || !supportsScrollBehavior) {
+		let isScrollingLock = false
+		let scrollLockCount = 0
 
-			if (distance < minDistance) {
-				minDistance = distance
-				currentIndex = i
+		const handleWheel = (e) => {
+			// Don't interfere with zoom
+			if (e.ctrlKey || e.metaKey) return
+
+			// Don't interfere with horizontal scroll
+			if (Math.abs(e.wheelDeltaY) < 10 && Math.abs(e.wheelDeltaX) > 10) return
+
+			if (scrollLockCount > 0) {
+				e.preventDefault()
+				e.stopPropagation()
+				return
+			}
+
+			// Check if we should snap based on scroll position
+			const currentScroll = mainElement.scrollTop
+			const viewportHeight = window.innerHeight
+			const scrollOffset = currentScroll - e.wheelDelta
+			const targetOffset =
+				(Math.round(currentScroll / viewportHeight) - Math.sign(e.wheelDelta)) * viewportHeight
+
+			// Check if there's scrollable content in the target range
+			const hasScrollableContent = Array.from(mainElement.querySelectorAll('section')).some(
+				(section) => {
+					const sectionTop = section.offsetTop
+					const sectionBottom = sectionTop + section.offsetHeight
+					return scrollOffset >= sectionTop && scrollOffset <= sectionBottom
+				}
+			)
+
+			if (hasScrollableContent) {
+				e.preventDefault()
+				e.stopPropagation()
+
+				const scrollToTarget = () => {
+					isScrollingLock = true
+					if (!supportsScrollBehavior) {
+						mainElement.style.scrollSnapType = 'none'
+					}
+					toggleSnapDebounced(true)
+
+					scrollLockCount += 1
+
+					mainElement.scrollTo({
+						left: 0,
+						top: targetOffset,
+						behavior: 'smooth'
+					})
+
+					// Reset snap after scroll
+					setTimeout(() => {
+						if (isSnapping) {
+							const resetScroll = mainElement.scrollTop
+							if (mainElement.style.scrollSnapType === 'y mandatory') {
+								if (!supportsScrollBehavior) {
+									let attempts = 5
+									mainElement.scrollTop = resetScroll
+									const fix = () => {
+										attempts -= 1
+										mainElement.scrollTop = resetScroll
+										if (attempts > 0) {
+											requestAnimationFrame(fix)
+										}
+									}
+									requestAnimationFrame(fix)
+								}
+							}
+						}
+					}, 500)
+
+					setTimeout(() => {
+						isScrollingLock = false
+						scrollLockCount -= 1
+					}, 1500)
+				}
+
+				scrollToTarget()
 			}
 		}
 
-		return currentIndex
+		mainElement.addEventListener('wheel', handleWheel, { passive: false })
 	}
 
-	// Handle wheel events for snap scrolling
-	function handleWheel(e) {
-		// Don't interfere with zoom
-		if (e.ctrlKey || e.metaKey) return
-
-		// Horizontal scroll
-		if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return
-
-		const deltaY = e.deltaY
-		const currentIndex = getCurrentSectionIndex()
-
-		// Prevent default scroll if we're snapping
-		if (isScrolling) {
-			e.preventDefault()
-			return
-		}
-
-		// Very sensitive threshold for better UX - responds to small movements
-		const threshold = 20
-
-		// Determine scroll direction
-		if (deltaY > threshold && currentIndex < sections.length - 1) {
-			e.preventDefault()
-			scrollToSection(currentIndex + 1)
-		} else if (deltaY < -threshold && currentIndex > 0) {
-			e.preventDefault()
-			scrollToSection(currentIndex - 1)
-		}
-	}
-
-	// Handle touch events for mobile
-	function handleTouchStart(e) {
-		touchStartY = e.touches[0].clientY
-	}
-
-	function handleTouchEnd(e) {
-		touchEndY = e.changedTouches[0].clientY
-
-		if (isScrolling) {
-			e.preventDefault()
-			return
-		}
-
-		const deltaY = touchStartY - touchEndY
-		const currentIndex = getCurrentSectionIndex()
-
-		// More sensitive touch threshold for better responsiveness
-		const threshold = 50
-
-		if (Math.abs(deltaY) > threshold) {
-			if (deltaY > 0 && currentIndex < sections.length - 1) {
-				scrollToSection(currentIndex + 1)
-				e.preventDefault()
-			} else if (deltaY < 0 && currentIndex > 0) {
-				scrollToSection(currentIndex - 1)
-				e.preventDefault()
-			}
-		}
-	}
-
-	// Handle keyboard navigation
-	function handleKeyDown(e) {
-		if (isScrolling) return
-
-		switch (e.key) {
-			case 'ArrowDown':
-				e.preventDefault()
-				const nextSection = getCurrentSectionIndex() + 1
-				if (nextSection < sections.length) {
-					scrollToSection(nextSection)
-				}
-				break
-			case 'ArrowUp':
-				e.preventDefault()
-				const prevSection = getCurrentSectionIndex() - 1
-				if (prevSection >= 0) {
-					scrollToSection(prevSection)
-				}
-				break
-			case 'Home':
-				e.preventDefault()
-				scrollToSection(0)
-				break
-			case 'End':
-				e.preventDefault()
-				scrollToSection(sections.length - 1)
-				break
-		}
-	}
-
-	// Initialize
-	function init() {
-		updateSections()
-
-		// Enable smooth scroll behavior
-		container.style.scrollBehavior = 'smooth'
-
-		// Add event listeners
-		container.addEventListener('wheel', handleWheel, { passive: false })
-		container.addEventListener('touchstart', handleTouchStart, { passive: true })
-		container.addEventListener('touchend', handleTouchEnd, { passive: false })
-
-		// Also listen on window for keyboard
-		window.addEventListener('keydown', handleKeyDown)
-
-		// Update sections on resize
-		const resizeObserver = new ResizeObserver(() => {
-			updateSections()
-		})
-
-		if (container) {
-			resizeObserver.observe(container)
-		}
-
-		return () => {
-			container.removeEventListener('wheel', handleWheel)
-			container.removeEventListener('touchstart', handleTouchStart)
-			container.removeEventListener('touchend', handleTouchEnd)
-			window.removeEventListener('keydown', handleKeyDown)
-			resizeObserver.disconnect()
-		}
-	}
-
-	return {
-		init,
-		scrollToSection,
-		getCurrentSectionIndex,
-		updateSections
+	return () => {
+		if (snapLockTimeout) clearTimeout(snapLockTimeout)
 	}
 }

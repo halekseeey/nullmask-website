@@ -10,398 +10,55 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 		
 		<style>
-			.content-wrapper {
-				position: relative;
-				isolation: isolate;
-				-webkit-overflow-scrolling: touch;
-				overscroll-behavior: none;
-				overscroll-behavior-y: none;
-				overscroll-behavior-x: none;
-				width: 100%;
-				max-width: 100vw;
-				overflow-x: hidden;
-				/* Improve mobile scrolling performance */
-				will-change: scroll-position;
-				/* transform: translateZ(0);
-				-webkit-transform: translateZ(0); */
-			}
-
-			.content-wrapper::-webkit-scrollbar {
-				position: relative;
-			}
-
-			/* prepare it for scroll with GSAP */
+			/* Hyperframe-style scroll structure */
 			
-			/* Prevent scrolling on body content */
-			.body-content {
-				overflow: hidden !important;
-				pointer-events: none;
-				/* -webkit-user-select: none; */
-				/* user-select: none; */
-				-webkit-touch-callout: none;
-				-webkit-tap-highlight-color: transparent;
-				-webkit-overflow-scrolling: touch;
-				/* Improve mobile performance */
-				will-change: auto;
-				/* transform: translateZ(0);
-				-webkit-transform: translateZ(0); */
-			}
-
-			/* Allow pointer events for interactive elements */
-			.body-content * {
-				pointer-events: auto;
-			}
-
-				
-			/* Prevent overscroll/bounce effects */
-			.content-wrapper {
-				overscroll-behavior: none;
-				overscroll-behavior-y: none;
-				overscroll-behavior-x: none;
-				-webkit-overflow-scrolling: touch;
-				max-height: 100vh;
-			
-				-webkit-overflow-scrolling: touch;
-				overflow-scrolling: touch;
-				width: 100%;
-				max-width: 100vw;
-				overflow-x: hidden;
-				/* Improve mobile scrolling */
-				will-change: scroll-position;
-				/* transform: translateZ(0);
-				-webkit-transform: translateZ(0); */
-			}
-
-			/* Prevent body overscroll */
-			body {
-				overscroll-behavior: none;
-				overscroll-behavior-y: none;
-				overscroll-behavior-x: none;
-				overflow: hidden;
-				max-height: 100vh;
-				max-width: 100vw;
-				width: 100%;
-				overflow-x: hidden;
-				/* Improve mobile performance */
-				will-change: auto;
-				/* transform: translateZ(0);
-				-webkit-transform: translateZ(0); */
-			}
-			/* Prevent html overscroll */
 			html {
+				overflow: hidden;
+				height: 100vh;
+				width: 100vw;
+				height: -webkit-fill-available;
+				width: -webkit-fill-available;
+				-webkit-overflow-scrolling: touch;
 				overscroll-behavior: none;
 				overscroll-behavior-y: none;
 				overscroll-behavior-x: none;
-				overflow: hidden;
-				max-height: 100vh;
-				max-width: 100vw;
-				width: 100%;
-				overflow-x: hidden;
-				/* -webkit-user-select: none;
-				user-select: none; */
-				-webkit-touch-callout: none;
-				-webkit-tap-highlight-color: transparent;
-				/* Improve mobile performance */
-				/* will-change: auto;
-				transform: translateZ(0);
-				-webkit-transform: translateZ(0); */
 			}
 
+			body {
+				width: 100%;
+				height: 100%;
+				overflow: hidden;
+				-webkit-overflow-scrolling: touch;
+				overscroll-behavior: none;
+				overscroll-behavior-y: none;
+				overscroll-behavior-x: none;
+			}
+
+			.body-content {
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+
+			/* Ensure box-sizing for all elements */
+			* {
+				box-sizing: border-box;
+			}
 
 			@supports (height: 100svh) {
-				body {
-					max-height: 100svh;
+				html {
+					height: 100svh;
 				}
 				
-				html {
-					max-height: 100svh;
-				}
-
-				.content-wrapper {
-					max-height: 100svh;
+				body {
+					height: 100svh;
 				}
 			}
-
-			/* Additional mobile optimizations */
-			
-			
 		</style>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover" class="h-full w-full overflow-hidden">
-		<div class="fixed top-0 left-0 overflow-auto content-wrapper"  >
-			<div class="body-content" style="display: contents">%sveltekit.body%</div>
-		</div>
-
+	<body data-sveltekit-preload-data="hover">
+		<div class="body-content">%sveltekit.body%</div>
 	</body>
 
-	<script>
-		// Redirect scroll events to parent container
-		document.addEventListener('DOMContentLoaded', function() {
-			const bodyContent = document.querySelector('.body-content');
-			const contentWrapper = document.querySelector('.content-wrapper');
-
-			if (bodyContent && contentWrapper) {
-				// Prevent scroll on body content
-				bodyContent.addEventListener('wheel', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					
-					// Apply scroll to parent container
-					contentWrapper.scrollTop += e.deltaY;
-				}, { passive: false });
-				
-				function animateWheelScroll() {
-					const friction = 0.85;
-					const minVelocity = 0.1;
-					
-					function animate() {
-						if (Math.abs(wheelVelocity) > minVelocity) {
-							// Apply velocity
-							contentWrapper.scrollTop += wheelVelocity;
-							
-							// Apply friction
-							wheelVelocity *= friction;
-							
-							// Handle boundaries
-							const maxScroll = contentWrapper.scrollHeight - contentWrapper.clientHeight;
-							if (contentWrapper.scrollTop < 0) {
-								contentWrapper.scrollTop = 0;
-								wheelVelocity = 0;
-							} else if (contentWrapper.scrollTop > maxScroll) {
-								contentWrapper.scrollTop = maxScroll;
-								wheelVelocity = 0;
-							}
-							
-							wheelAnimation = requestAnimationFrame(animate);
-						} else {
-							wheelVelocity = 0;
-							wheelAnimation = null;
-						}
-					}
-					
-					wheelAnimation = requestAnimationFrame(animate);
-				}
-
-				// Enhanced touch handling with momentum scrolling
-				let touchStartY = 0;
-				let touchStartScrollTop = 0;
-				let isScrolling = false;
-				let lastTouchY = 0;
-				let lastTouchTime = 0;
-				let touchVelocities = [];
-				let momentumAnimation = null;
-
-				// Touch start
-				bodyContent.addEventListener('touchstart', function(e) {
-					touchStartY = e.touches[0].clientY;
-					lastTouchY = touchStartY;
-					lastTouchTime = Date.now();
-					touchStartScrollTop = contentWrapper.scrollTop;
-					isScrolling = false;
-					touchVelocities = [];
-					
-					// Cancel any ongoing momentum animation
-					if (momentumAnimation) {
-						cancelAnimationFrame(momentumAnimation);
-						momentumAnimation = null;
-					}
-				}, { passive: true });
-
-				bodyContent.addEventListener('touchmove', function(e) {
-					if (e.touches.length === 1) {
-						const touchY = e.touches[0].clientY;
-						const currentTime = Date.now();
-						const deltaY = touchStartY - touchY;
-						
-						// Calculate velocity
-						const timeDelta = currentTime - lastTouchTime;
-						if (timeDelta > 0) {
-							const velocity = (touchY - lastTouchY) / timeDelta; // Fixed direction
-							touchVelocities.push(velocity);
-							
-							// Keep only last 5 velocity samples for averaging
-							if (touchVelocities.length > 5) {
-								touchVelocities.shift();
-							}
-						}
-						
-						// Only prevent default if we're actually scrolling
-						if (Math.abs(deltaY) > 5) {
-							e.preventDefault();
-							e.stopPropagation();
-							isScrolling = true;
-							
-							// Apply scroll to parent container with resistance at boundaries
-							let newScrollTop = touchStartScrollTop + deltaY;
-							const maxScroll = contentWrapper.scrollHeight - contentWrapper.clientHeight;
-							
-							// Add resistance at top and bottom
-							if (newScrollTop < 0) {
-								newScrollTop = newScrollTop * 0.3; // 30% resistance
-							} else if (newScrollTop > maxScroll) {
-								const overscroll = newScrollTop - maxScroll;
-								newScrollTop = maxScroll + overscroll * 0.3; // 30% resistance
-							}
-							
-							contentWrapper.scrollTop = newScrollTop;
-						}
-						
-						lastTouchY = touchY;
-						lastTouchTime = currentTime;
-					}
-				}, { passive: false });
-
-				// Touch end with momentum
-				bodyContent.addEventListener('touchend', function(e) {
-					isScrolling = false;
-					
-					// Calculate average velocity
-					if (touchVelocities.length > 0) {
-						const avgVelocity = touchVelocities.reduce((a, b) => a + b, 0) / touchVelocities.length;
-						const velocity = avgVelocity * 1000; // Convert to pixels per second
-						
-						// Apply momentum if velocity is significant
-						if (Math.abs(velocity) > 50) {
-							applyMomentum(velocity);
-						}
-					}
-				}, { passive: true });
-
-				// Momentum scrolling function
-				function applyMomentum(initialVelocity) {
-					const friction = 0.95; // Friction coefficient
-					let currentVelocity = initialVelocity;
-					let currentScrollTop = contentWrapper.scrollTop;
-					const maxScroll = contentWrapper.scrollHeight - contentWrapper.clientHeight;
-					
-					function animateMomentum() {
-						// Apply velocity (positive velocity moves content down)
-						currentScrollTop -= currentVelocity * 0.016; // 60fps
-						
-						// Apply friction
-						currentVelocity *= friction;
-						
-						// Handle boundaries
-						if (currentScrollTop < 0) {
-							currentScrollTop = 0;
-							currentVelocity = 0;
-						} else if (currentScrollTop > maxScroll) {
-							currentScrollTop = maxScroll;
-							currentVelocity = 0;
-						}
-						
-						// Apply scroll
-						contentWrapper.scrollTop = currentScrollTop;
-						
-						// Continue animation if velocity is still significant
-						if (Math.abs(currentVelocity) > 1) {
-							momentumAnimation = requestAnimationFrame(animateMomentum);
-						} else {
-							momentumAnimation = null;
-						}
-					}
-					
-					momentumAnimation = requestAnimationFrame(animateMomentum);
-				}
-
-				// Additional touch event listeners for better Android compatibility
-				bodyContent.addEventListener('touchcancel', function(e) {
-					isScrolling = false;
-				}, { passive: true });
-
-				// Enhanced keyboard handling with smooth scrolling
-				let keyboardAnimation = null;
-				
-				bodyContent.addEventListener('keydown', function(e) {
-					if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || 
-						e.key === 'PageUp' || e.key === 'PageDown' ||
-						e.key === 'Home' || e.key === 'End') {
-						e.preventDefault();
-						e.stopPropagation();
-						
-						// Cancel any ongoing keyboard animation
-						if (keyboardAnimation) {
-							cancelAnimationFrame(keyboardAnimation);
-						}
-						
-						const targetScroll = e.key === 'ArrowUp' ? contentWrapper.scrollTop - 100 :
-											e.key === 'ArrowDown' ? contentWrapper.scrollTop + 100 :
-											e.key === 'PageUp' ? contentWrapper.scrollTop - contentWrapper.clientHeight :
-											e.key === 'PageDown' ? contentWrapper.scrollTop + contentWrapper.clientHeight :
-											e.key === 'Home' ? 0 :
-											contentWrapper.scrollHeight - contentWrapper.clientHeight;
-						
-						// Smooth scroll to target
-						smoothScrollTo(targetScroll, 300); // 300ms duration
-					}
-				});
-				
-				function smoothScrollTo(targetScroll, duration) {
-					const startScroll = contentWrapper.scrollTop;
-					const distance = targetScroll - startScroll;
-					const startTime = performance.now();
-					
-					function animate(currentTime) {
-						const elapsed = currentTime - startTime;
-						const progress = Math.min(elapsed / duration, 1);
-						
-						// Easing function (ease-out)
-						const easeOut = 1 - Math.pow(1 - progress, 3);
-						
-						const currentScroll = startScroll + distance * easeOut;
-						contentWrapper.scrollTop = currentScroll;
-						
-						if (progress < 1) {
-							keyboardAnimation = requestAnimationFrame(animate);
-						} else {
-							keyboardAnimation = null;
-						}
-					}
-					
-					keyboardAnimation = requestAnimationFrame(animate);
-				}
-
-				// Enhanced boundary handling with bounce effect
-				contentWrapper.addEventListener('scroll', function(e) {
-					const maxScroll = contentWrapper.scrollHeight - contentWrapper.clientHeight;
-					if (contentWrapper.scrollTop > maxScroll) {
-						contentWrapper.scrollTop = maxScroll;
-					}
-				});
-
-				// Enhanced wheel handling on content wrapper
-				contentWrapper.addEventListener('wheel', function(e) {
-					const currentScrollTop = contentWrapper.scrollTop;
-					const maxScroll = contentWrapper.scrollHeight - contentWrapper.clientHeight;
-					
-					// If trying to scroll up when already at top
-					if (e.deltaY < 0 && currentScrollTop <= 0) {
-						e.preventDefault();
-						e.stopPropagation();
-						return;
-					}
-					
-					// If trying to scroll down when already at bottom
-					if (e.deltaY > 0 && currentScrollTop >= maxScroll) {
-						e.preventDefault();
-						e.stopPropagation();
-						return;
-					}
-				}, { passive: false });
-
-				// Additional Android-specific fixes
-				contentWrapper.addEventListener('touchmove', function(e) {
-					// Allow natural scrolling on the wrapper itself
-				}, { passive: true });
-
-				// Prevent pull-to-refresh on Android
-				document.addEventListener('touchmove', function(e) {
-					if (e.target.closest('.body-content')) {
-						e.preventDefault();
-					}
-				}, { passive: false });
-			}
-		});
-	</script>
 </html>
