@@ -11,7 +11,7 @@
 	data-section="keyhole"
 	data-theme="light"
 	id="landing-page"
-	class={cn('bg-light h-screen min-h-[600px] w-full overflow-hidden', className)}
+	class={cn('bg-light h-screen min-h-[650px] w-full overflow-hidden', className)}
 >
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] lg:items-center"

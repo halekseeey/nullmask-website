@@ -54,7 +54,7 @@
 	data-section="city"
 	data-theme="light"
 	id="landing-page"
-	class={cn('bg-light h-screen min-h-[600px] w-full overflow-hidden', className)}
+	class={cn('bg-light h-screen min-h-[600px] w-full overflow-hidden md:min-h-[700px]', className)}
 >
 	<div
 		class="relative mx-auto flex h-full max-w-[1440px] flex-col md:flex-row md:items-center md:gap-12"
