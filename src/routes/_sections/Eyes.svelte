@@ -18,7 +18,7 @@
 >
 	<div class="relative mx-auto flex h-full max-w-[1440px] flex-col items-center gap-4 md:flex-row">
 		<div
-			class="md:order-0 relative order-1 -mt-32 w-full flex-grow overflow-y-hidden md:h-full md:w-[50%] md:flex-shrink-0"
+			class="md:order-0 relative order-1 -mt-32 w-full flex-grow overflow-y-hidden md:mt-0 md:h-full md:w-[50%] md:flex-shrink-0"
 		>
 			<Eye className="h-full w-full object-contain md:-translate-x-[50px]" {viewMode} />
 		</div>
