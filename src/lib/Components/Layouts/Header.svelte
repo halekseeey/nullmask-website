@@ -23,28 +23,28 @@
 	<div
 		class={cn(
 			'flex h-full justify-between rounded-t-[15px]  border transition-all duration-500',
-			(!$isMenuOpen || mediaQuery.lg) && 'rounded-b-[15px]'
+			(!$isMenuOpen || mediaQuery.md) && 'rounded-b-[15px]'
 		)}
 		class:bg-dark={$currentSection.theme === 'dark'}
 		class:bg-light={$currentSection.theme === 'light'}
 		class:border-light={$currentSection.theme === 'dark'}
 		class:border-dark={$currentSection.theme === 'light'}
 	>
-		<div class="items-cetner flex h-full flex-shrink-0 gap-1">
+		<div class="items-cetner flex h-full flex-shrink-0 gap-2 md:gap-4">
 			<a href="/" class="block flex items-center">
 				<Logo
-					className="h-18 w-18 transition-all duration-500 lg:h-20 lg:w-20"
+					className="h-12 w-12 transition-colors ml-2 md:ml-4 duration-500 md:h-16 md:w-16"
 					theme={$currentSection.theme}
 				/>
 			</a>
 
 			<Wordmark
-				className="w-[240px] flex-shrink-0  transition-all duration-500 h-auto object-contain"
+				className="md:w-[240px] w-[160px] flex-shrink-0  transition-colors duration-500 h-auto object-contain"
 				theme={$currentSection.theme}
 			/>
 		</div>
 
-		{#if !$mediaQuery.lg}
+		{#if !$mediaQuery.md}
 			<MenuToggle
 				className="border-l flex items-center justify-center transition-colors duration-500 {$currentSection.theme ===
 				'light'
@@ -57,7 +57,7 @@
 	</div>
 </header>
 
-{#if $isMenuOpen && !mediaQuery.lg}
+{#if $isMenuOpen && !mediaQuery.md}
 	<div
 		class=" fixed bottom-0 z-[10000] flex flex-col overflow-hidden px-4"
 		style="top: {$mediaQuery.md
