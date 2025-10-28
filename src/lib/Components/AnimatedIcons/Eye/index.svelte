@@ -10,15 +10,15 @@
 	// Different viewBox modes
 	const viewBoxes = [
 		{ x: 0, y: 0, width: 436, height: 536 }, //default
-		{ x: 100, y: 0, width: 286, height: 536 }, // default - full view
-		{ x: 100, y: 0, width: 286, height: 536 }
+		{ x: 50, y: 0, width: 286, height: 536 }, // default - full view
+		{ x: 50, y: 0, width: 286, height: 536 }
 	]
 
 	$: {
 		if (svgRef) {
 			const targetViewBox = viewBoxes[viewMode]
 			gsap.to(svgRef, {
-				duration: 0.6,
+				duration: 0,
 				ease: 'power2.inOut',
 				attr: {
 					viewBox: `${targetViewBox.x} ${targetViewBox.y} ${targetViewBox.width} ${targetViewBox.height}`
@@ -40,7 +40,7 @@
 	fill="none"
 	xmlns="http://www.w3.org/2000/svg"
 	class={className}
-	preserveAspectRatio={viewMode == 0 ? 'xMidYMid meet' : 'xMidYMid meet'}
+	preserveAspectRatio={viewMode == 0 ? 'xMidYMid meet' : 'xMinYMid meet'}
 >
 	<path
 		d="M0 0L424.445 419.772C424.445 419.772 478.546 479.398 332.228 507.809C256.241 522.564 168.4 504.918 141.154 491.087C99.3486 473.873 97.1354 449.036 97.1354 449.036L0 0Z"

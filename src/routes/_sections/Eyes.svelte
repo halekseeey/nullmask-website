@@ -18,9 +18,12 @@
 >
 	<div class="relative mx-auto flex h-full max-w-[1440px] flex-col items-center gap-4 md:flex-row">
 		<div
-			class="md:order-0 relative order-1 -mt-32 w-full flex-grow overflow-y-hidden md:mt-0 md:h-full md:w-[50%] md:flex-shrink-0"
+			class="md:order-0 relative order-1 mt-auto w-full flex-grow overflow-visible md:h-full md:w-[50%] md:flex-shrink-0"
 		>
-			<Eye className="h-full w-full object-contain md:-translate-x-[50px]" {viewMode} />
+			<Eye
+				className="h-[calc(100%+40px)] md:h-full w-full -mt-24 md:mt-0 object-contain md:-translate-x-[50px] max-h-[500px] md:max-h-full "
+				{viewMode}
+			/>
 		</div>
 		<div
 			class="order-0 relative z-[1] flex max-w-[500px] flex-col px-4 text-white md:order-1 md:mr-10 md:mr-10 md:px-0 xl:mr-16"
@@ -48,7 +51,7 @@
 				</button>
 
 				<button
-					class="border-dark bg-light text-dark hover:bg-dark xs:w-full hover:text-green hover:border-green mx-auto w-[250px] rounded-[10px] border py-1.5 transition-all transition-all duration-300 duration-300"
+					class="border-dark bg-light text-dark hover:bg-dark xs:w-full hover:text-green hover:border-green mx-auto w-[250px] rounded-[10px] border py-1.5 transition-all duration-300 duration-300"
 				>
 					Business Inquiries
 				</button>
