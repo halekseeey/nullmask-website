@@ -4,6 +4,7 @@
 	import { mediaQuery } from '$lib/Stores/mediaQuery'
 	import { HEADER } from '$lib/const'
 	import { cn } from '$utils'
+	import { onMount } from 'svelte'
 
 	export let className = ''
 
@@ -28,6 +29,8 @@
 
 	let viewMode = 1
 	let previousViewMode = 1
+	let isTouchDevice = false
+	let cityRef
 
 	// Auto-switch based on screen size
 	$: if ($mediaQuery.lg) {
@@ -48,6 +51,26 @@
 		const targetPosition = event.detail
 		setViewMode(targetPosition)
 	}
+
+	// Function to detect touch device
+	function detectTouchDevice() {
+		isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+	}
+
+	onMount(() => {
+		// Detect touch device
+		detectTouchDevice()
+
+		// Update on resize
+		function handleResize() {
+			detectTouchDevice()
+		}
+		window.addEventListener('resize', handleResize)
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	})
 </script>
 
 <section
@@ -90,8 +113,9 @@
 
 				<div
 					class="border-dark xs:mx-auto relative mx-4 max-w-[370px] flex-grow overflow-hidden rounded-[20px] border"
+					bind:this={cityRef}
 				>
-					<City className="h-full w-full object-cover" {viewMode} />
+					<City className="h-full w-full object-cover" {viewMode} {isTouchDevice} />
 
 					<!-- View mode button - only show on non-large screens -->
 				</div>
@@ -120,8 +144,9 @@
 						!$mediaQuery.lg &&
 							'border-dark mx-4 max-h-[500px] overflow-hidden rounded-[20px] border'
 					)}
+					bind:this={cityRef}
 				>
-					<City className="h-full w-full object-contain" {viewMode} />
+					<City className="h-full w-full object-contain" {viewMode} {isTouchDevice} />
 
 					<!-- View mode button - only show on non-large screens -->
 				</div>

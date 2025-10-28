@@ -26,7 +26,7 @@
 		}
 	]
 
-	function handleMouseEnter() {
+	export function handleMouseEnter() {
 		isHovered = true
 		pathRefs.forEach((path, index) => {
 			if (path && pathData[index]) {
@@ -47,7 +47,7 @@
 		animations.push(colorAnim)
 	}
 
-	function handleMouseLeave() {
+	export function handleMouseLeave() {
 		isHovered = false
 		animations.forEach((anim) => anim.kill())
 		animations = []

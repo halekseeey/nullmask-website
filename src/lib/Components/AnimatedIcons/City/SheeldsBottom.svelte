@@ -14,7 +14,7 @@
 	// Animation duration constant
 	const ANIMATION_DURATION = 0.5
 
-	function handleMouseEnter() {
+	export function handleMouseEnter() {
 		isHovered = true
 
 		const colorAnim = gsap.to(colorAnimation, {
@@ -25,7 +25,7 @@
 		animations.push(colorAnim)
 	}
 
-	function handleMouseLeave() {
+	export function handleMouseLeave() {
 		isHovered = false
 		animations.forEach((anim) => anim.kill())
 		animations = []
