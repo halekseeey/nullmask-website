@@ -33,6 +33,34 @@
 	let recalcTimeout
 	let resizeObserver
 	let mutationObserver
+	let isTouchDevice = false
+	let cardRefs = []
+	let previousVisibleCards = new Set()
+
+	// Function to detect touch device
+	function detectTouchDevice() {
+		isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches
+	}
+
+	// Function to trigger hover effect on card
+	function triggerCardHover(cardIndex, isEnter) {
+		if (!isTouchDevice || !cardRefs[cardIndex]) return
+
+		const cardElement = cardRefs[cardIndex]
+		const cardComponent = cardElement.querySelector('[role="region"]')
+
+		if (cardComponent) {
+			if (isEnter) {
+				// Trigger mouseenter effect
+				const event = new MouseEvent('mouseenter', { bubbles: true })
+				cardComponent.dispatchEvent(event)
+			} else {
+				// Trigger mouseleave effect
+				const event = new MouseEvent('mouseleave', { bubbles: true })
+				cardComponent.dispatchEvent(event)
+			}
+		}
+	}
 
 	// Function to scroll to specific card
 	function scrollToCard(index) {
@@ -110,10 +138,31 @@
 		const useLast = lastFullIndex !== -1 ? lastFullIndex : lastPartialIndex
 
 		// Pick a single representative active button (middle of the visible range)
+		const previousActiveIndex = activeSingleIndex
 		if (useFirst !== -1 && useLast !== -1) {
 			activeSingleIndex = Math.round((useFirst + useLast) / 2)
 		} else {
 			activeSingleIndex = -1
+		}
+
+		// Manage touch device hover effects
+		if (isTouchDevice) {
+			// Remove hover from cards that are no longer visible
+			previousVisibleCards.forEach((cardIndex) => {
+				if (!visibleCards.has(cardIndex)) {
+					triggerCardHover(cardIndex, false)
+				}
+			})
+
+			// Add hover to newly visible cards
+			visibleCards.forEach((cardIndex) => {
+				if (!previousVisibleCards.has(cardIndex)) {
+					triggerCardHover(cardIndex, true)
+				}
+			})
+
+			// Update previous state
+			previousVisibleCards = new Set(visibleCards)
 		}
 
 		// Defer bar measurement to next frame to allow DOM/class updates to apply
@@ -166,15 +215,14 @@
 	onMount(() => {
 		if (!carouselList) return
 
-		// Handle wheel events - only block to prevent parent snap scroll interference
-		function handleWheel(e) {
-			// Check if this is a horizontal gesture
-			const isHorizontalGesture = Math.abs(e.deltaX) > Math.abs(e.deltaY) || Math.abs(e.deltaX) >= 1
+		// Detect touch device
+		detectTouchDevice()
 
-			// Only prevent propagation to parent to avoid interfering with vertical snap
-			if (isHorizontalGesture) {
-				e.stopPropagation()
-			}
+		// Handle wheel events - block all wheel scrolling on carousel
+		function handleWheel(e) {
+			// Prevent all wheel scrolling on carousel
+			e.preventDefault()
+			e.stopPropagation()
 		}
 
 		// Handle touch events - prevent parent snap scroll when touching carousel
@@ -192,7 +240,7 @@
 			})
 		}
 
-		// carouselList.addEventListener('wheel', handleWheel, { passive: true })
+		carouselList.addEventListener('wheel', handleWheel, { passive: false })
 		carouselList.addEventListener('touchstart', handleTouch, { passive: true })
 		carouselList.addEventListener('touchmove', handleTouch, { passive: true })
 		carouselList.addEventListener('scroll', handleScroll, { passive: true })
@@ -214,6 +262,7 @@
 
 		// Update on resize
 		function handleResize() {
+			detectTouchDevice()
 			updateVisibleCards()
 		}
 		window.addEventListener('resize', handleResize)
@@ -248,7 +297,7 @@
 		}
 
 		return () => {
-			// carouselList.removeEventListener('wheel', handleWheel)
+			carouselList.removeEventListener('wheel', handleWheel)
 			carouselList.removeEventListener('touchstart', handleTouch)
 			carouselList.removeEventListener('touchmove', handleTouch)
 			carouselList.removeEventListener('scroll', handleScroll)
@@ -288,8 +337,11 @@
 			bind:this={carouselList}
 			class="carousel-list flex gap-4 overflow-x-auto px-4 md:px-8 lg:grid lg:grid-cols-5 lg:px-8"
 		>
-			{#each CARDS as { component: Card, name }}
-				<li class="carousel-item h-full w-[263px] flex-shrink-0 lg:w-auto">
+			{#each CARDS as { component: Card, name }, index}
+				<li
+					class="carousel-item h-full w-[263px] flex-shrink-0 lg:w-auto"
+					bind:this={cardRefs[index]}
+				>
 					<Card className="w-auto h-full" />
 				</li>
 			{/each}
