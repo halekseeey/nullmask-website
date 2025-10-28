@@ -21,7 +21,7 @@
 			class="md:order-0 relative order-1 mt-auto w-full flex-grow overflow-visible md:h-full md:w-[50%] md:flex-shrink-0"
 		>
 			<Eye
-				className="h-[calc(100%+40px)] md:h-full w-full -mt-24 md:mt-0 object-contain md:-translate-x-[50px] max-h-[500px] md:max-h-full "
+				className="h-full md:h-full w-full -mt-24 md:mt-0 object-contain md:-translate-x-[50px] max-h-[500px] md:max-h-full "
 				{viewMode}
 			/>
 		</div>
