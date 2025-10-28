@@ -45,7 +45,7 @@
 	fill="none"
 	class={className}
 	xmlns="http://www.w3.org/2000/svg"
-	preserveAspectRatio="xMaxYMid meet"
+	preserveAspectRatio="xMidYMid meet"
 >
 	<TokenBottom x={0} y={0} />
 

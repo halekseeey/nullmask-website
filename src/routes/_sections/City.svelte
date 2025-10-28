@@ -54,34 +54,91 @@
 	data-section="city"
 	data-theme="light"
 	id="landing-page"
-	class={cn('bg-light h-screen min-h-[600px] w-full', className)}
+	class={cn('bg-light h-screen min-h-[600px] w-full overflow-hidden', className)}
 >
 	<div
-		class="relative mx-auto flex h-full max-w-[1440px] items-center gap-12"
+		class="relative mx-auto flex h-full max-w-[1440px] flex-col md:flex-row md:items-center md:gap-12"
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"
 	>
-		<div class="relative z-[1] flex max-w-[420px] flex-col md:ml-10 lg:ml-16 xl:ml-32">
-			<h2 class="mb-8 text-[45px] font-[500] leading-[1.1]">ONE SOLUTION. ANY USE CASE.</h2>
+		<div
+			class=" relative z-[1] flex h-full flex-col md:ml-10 md:h-auto md:max-w-[420px] lg:ml-16 xl:ml-32"
+		>
+			<h2
+				class=" city-top xs:mb-4 xs:text-[28px] mb-2 mt-4 px-4 text-[20px] font-[500] leading-[1.1] md:mb-8 md:mt-0 md:px-0 md:text-[45px]"
+			>
+				ONE SOLUTION. ANY USE CASE.
+			</h2>
 
-			<ul class="flex flex-col gap-6 text-xl">
-				{#each LIST_ITEMS as item}
-					<li>
-						<span class="font-[600]">{item.bold}</span>
-						<span>{item.basic}</span>
-					</li>
-				{/each}
-			</ul>
-		</div>
+			{#if $mediaQuery.md}
+				<ul class="flex flex-col gap-6 text-xl leading-[1.5]">
+					{#each LIST_ITEMS as item, index}
+						<li>
+							<span class="font-[600]">{item.bold}</span>
+							<span>{item.basic}</span>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<ul class="xs:text-xl mb-4 flex flex-col gap-2 px-4 leading-[1.25]">
+					{#each LIST_ITEMS.slice(0, 2) as item}
+						<li>
+							<span class="font-[600]">{item.bold}</span>
+							<span>{item.basic}</span>
+						</li>
+					{/each}
+				</ul>
 
-		<div class="relative h-full">
-			<City className="h-full w-full object-contain" {viewMode} />
+				<div
+					class="border-dark xs:mx-auto relative mx-4 max-w-[370px] flex-grow overflow-hidden rounded-[20px] border"
+				>
+					<City className="h-full w-full object-cover" {viewMode} />
 
-			<!-- View mode button - only show on non-large screens -->
-			{#if !$mediaQuery.lg}
-				<div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+					<!-- View mode button - only show on non-large screens -->
+				</div>
+
+				<div class="mx-auto mt-2">
 					<Button activePosition={viewMode} on:position-change={handlePositionChange} />
 				</div>
+
+				<ul class="xs:text-xl mb-8 mt-4 flex flex-col gap-2 px-4 leading-[1.25]">
+					{#each LIST_ITEMS.slice(2, 4) as item}
+						<li>
+							<span class="font-[600]">{item.bold}</span>
+							<span>{item.basic}</span>
+						</li>
+					{/each}
+				</ul>
 			{/if}
 		</div>
+
+		{#if $mediaQuery.md}
+			<div class="flex h-full flex-col justify-center">
+				<div
+					style="height: calc(100% - 16px);"
+					class={cn(
+						'relative ',
+						!$mediaQuery.lg &&
+							'border-dark mx-4 max-h-[500px] overflow-hidden rounded-[20px] border'
+					)}
+				>
+					<City className="h-full w-full object-contain" {viewMode} />
+
+					<!-- View mode button - only show on non-large screens -->
+				</div>
+				{#if !$mediaQuery.lg}
+					<div class="mx-auto mt-4 w-fit">
+						<Button activePosition={viewMode} on:position-change={handlePositionChange} />
+					</div>
+				{/if}
+			</div>
+		{/if}
 	</div>
 </section>
+
+<style>
+	@media (max-height: 700px) {
+		.city-top {
+			margin-top: 10px !important;
+		}
+	}
+</style>
