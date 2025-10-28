@@ -67,7 +67,7 @@
 </script>
 
 <div bind:this={scrollContainer} id="main" class="snap-scroll">
-	<Hero />
+	<!-- <Hero /> -->
 	<Keyhole />
 	<Carousel />
 	<Phone />
