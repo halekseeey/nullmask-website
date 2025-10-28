@@ -10,8 +10,8 @@
 	// Different viewBox modes
 	const viewBoxes = [
 		{ x: 0, y: 0, width: 436, height: 536 }, //default
-		{ x: 70, y: 0, width: 386, height: 536 }, // default - full view
-		{ x: 0, y: 0, width: 536, height: 636 } // left part
+		{ x: 100, y: 0, width: 326, height: 536 }, // default - full view
+		{ x: 130, y: 0, width: 286, height: 536 }
 	]
 
 	$: {

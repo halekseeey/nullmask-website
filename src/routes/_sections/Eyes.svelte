@@ -7,7 +7,7 @@
 	export let className = ''
 
 	// Auto-select viewMode based on screen size
-	$: viewMode = $mediaQuery.md ? 0 : 1
+	$: viewMode = $mediaQuery.md ? 0 : $mediaQuery.s ? 1 : 2
 </script>
 
 <section
@@ -27,7 +27,7 @@
 			style="margin-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px; "
 		>
 			<h2
-				class="heading-top xs:text-[28px] mb-4 mt-14 text-[20px] font-[500] leading-[1.1] md:mb-8 md:mt-0 md:text-[38px]"
+				class="heading-top xs:text-[28px] mb-4 mt-5 text-[20px] font-[500] leading-[1.1] md:mb-8 md:mt-0 md:text-[38px]"
 			>
 				Freedom isn’t freedom if someone’s always watching.
 			</h2>

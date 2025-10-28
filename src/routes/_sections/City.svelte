@@ -64,7 +64,7 @@
 			class=" relative z-[1] flex h-full flex-col md:ml-10 md:h-auto md:max-w-[420px] lg:ml-16 xl:ml-32"
 		>
 			<h2
-				class=" city-top xs:mb-4 xs:text-[28px] mb-2 mt-4 px-4 text-[20px] font-[500] leading-[1.1] md:mb-8 md:mt-0 md:px-0 md:text-[45px]"
+				class=" city-top xs:mb-4 s:text-[28px] mb-2 mt-4 px-4 text-[20px] font-[500] leading-[1.1] md:mb-8 md:mt-0 md:px-0 md:text-[45px]"
 			>
 				ONE SOLUTION. ANY USE CASE.
 			</h2>
@@ -79,7 +79,7 @@
 					{/each}
 				</ul>
 			{:else}
-				<ul class="xs:text-xl mb-4 flex flex-col gap-2 px-4 leading-[1.25]">
+				<ul class="s:text-xl mb-4 flex flex-col gap-2 px-4 leading-[1.25]">
 					{#each LIST_ITEMS.slice(0, 2) as item}
 						<li>
 							<span class="font-[600]">{item.bold}</span>
@@ -100,7 +100,7 @@
 					<Button activePosition={viewMode} on:position-change={handlePositionChange} />
 				</div>
 
-				<ul class="xs:text-xl mb-8 mt-4 flex flex-col gap-2 px-4 leading-[1.25]">
+				<ul class="s:text-xl mb-8 mt-4 flex flex-col gap-2 px-4 leading-[1.25]">
 					{#each LIST_ITEMS.slice(2, 4) as item}
 						<li>
 							<span class="font-[600]">{item.bold}</span>
