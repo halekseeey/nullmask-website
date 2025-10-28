@@ -271,7 +271,7 @@
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"
 	>
 		<h2
-			class="text-light mb-14 px-4 text-4xl text-[38px] leading-[1.1] md:ml-10 md:text-[60px] lg:ml-16 lg:text-[70px] xl:ml-24 xl:text-[80px]"
+			class="text-light heading-bottom mb-14 px-4 text-4xl text-[38px] leading-[1.1] md:ml-10 md:text-[60px] lg:ml-16 lg:text-[70px] xl:ml-24 xl:text-[80px]"
 		>
 			<span>
 				Privacy
@@ -297,7 +297,7 @@
 
 		<!-- {#if !$mediaQuery.lg} -->
 		<div
-			class="border-light mx-auto mt-8 flex w-fit justify-center rounded-[20px] border px-3 py-2 lg:z-[-1]"
+			class="border-light scrollbar-top mx-auto mt-8 flex w-fit justify-center rounded-[20px] border px-3 py-2 lg:z-[-1]"
 		>
 			<div
 				class="slider-buttons relative flex items-center gap-2"
@@ -411,5 +411,15 @@
 		pointer-events: none;
 		z-index: 2;
 		transform: translateY(-50%);
+	}
+
+	@media (max-height: 700px) {
+		.heading-bottom {
+			margin-bottom: 10px !important;
+		}
+
+		.scrollbar-top {
+			margin-top: 15px !important;
+		}
 	}
 </style>
