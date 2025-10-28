@@ -4,7 +4,7 @@
 
 	export let x
 	export let y
-	export let rotation = 0 // rotation angle in degrees
+
 	export let animationDuration = 2 // animation duration in seconds
 
 	let pathRefs = []
@@ -44,15 +44,7 @@
 	})
 </script>
 
-<svg
-	{x}
-	{y}
-	width="60"
-	height="94"
-	viewBox="0 0 60 94"
-	fill="none"
-	style="transform: rotate({rotation}deg); transform-origin: center;"
->
+<svg {x} {y} width="60" height="94" viewBox="0 0 60 94" fill="none">
 	<path
 		d="M47.0491 29.3326C47.0491 19.4086 40.0799 7.33946 31.482 2.37297C27.1742 -0.110273 23.2758 -0.341687 20.4632 1.29601L17.5171 3.01381L18.3716 3.09391C16.8229 4.98972 15.915 7.79339 15.915 11.3625C15.915 21.2866 22.8841 33.3557 31.482 38.3222C34.437 40.0311 37.1962 40.6719 39.5459 40.3782L39.4836 41.1703L42.4742 39.4258C42.4742 39.4258 42.5009 39.408 42.5098 39.408L42.6344 39.3368C45.3669 37.6724 47.058 34.2279 47.058 29.3415L47.0491 29.3326Z"
 		fill="#CDEF33"

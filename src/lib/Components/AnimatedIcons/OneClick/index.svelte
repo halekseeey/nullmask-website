@@ -1,6 +1,11 @@
 <script>
 	import Button from './Button.svelte'
-	import Coin from './Coin.svelte'
+	import Coin1 from './Coin1.svelte'
+	import Coin2 from './Coin2.svelte'
+	import Coin3 from './Coin3.svelte'
+	import Coin4 from './Coin4.svelte'
+	import Coin5 from './Coin5.svelte'
+	import Coin from './CoinFirst.svelte'
 	import Left from './Left.svelte'
 	import Right from './Right.svelte'
 	import { gsap } from 'gsap'
@@ -485,11 +490,11 @@
 
 	<Button x={0} y={479.89} bind:buttonState on:click={handleButtonClick} />
 
-	<Coin x={301.52} y={286.51} animationDuration={2} />
-	<Coin x={300.57} y={313.07} rotation={21.98} animationDuration={2} />
-	<Coin x={260.85} y={249.09} rotation={62.62} animationDuration={2} />
-	<Coin x={210.85} y={259.09} rotation={98.49} animationDuration={2} />
-	<Coin x={180.85} y={259.09} rotation={92.57} animationDuration={2} />
+	<Coin1 x={269.54} y={309.07} animationDuration={2} />
+	<Coin2 x={306.52} y={296.51} animationDuration={2} />
+	<Coin3 x={268.93} y={245.47} animationDuration={2} />
+	<Coin4 x={254.44} y={215.5} animationDuration={2} />
+	<Coin5 x={272.61} y={186.12} animationDuration={2} />
 
 	<Left x={70.86} y={293.13} />
 
