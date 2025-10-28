@@ -9,6 +9,7 @@
 	import { HEADER } from '$lib/const'
 	import { cn } from '$utils'
 	import { onMount } from 'svelte'
+	import { gsap } from 'gsap'
 
 	export let className = ''
 
@@ -21,6 +22,146 @@
 	]
 
 	let carouselList
+	let visibleCards = new Set()
+	let buttonElements = []
+	let sliderButtonsContainer
+	let activeBar
+	let quickLeft
+	let quickWidth
+	let scrollScheduled = false
+	let activeSingleIndex = -1
+	let recalcTimeout
+	let resizeObserver
+	let mutationObserver
+
+	// Function to scroll to specific card
+	function scrollToCard(index) {
+		if (!carouselList) return
+
+		const cards = carouselList.querySelectorAll('.carousel-item')
+		if (cards[index]) {
+			cards[index].scrollIntoView({
+				behavior: 'smooth',
+				block: 'nearest',
+				inline: 'center'
+			})
+		}
+	}
+
+	// Function to find consecutive groups of visible cards
+	function findConsecutiveGroups(visibleIndices) {
+		if (visibleIndices.length === 0) return []
+
+		const sorted = [...visibleIndices].sort((a, b) => a - b)
+		const groups = []
+		let currentGroup = [sorted[0]]
+
+		for (let i = 1; i < sorted.length; i++) {
+			if (sorted[i] === sorted[i - 1] + 1) {
+				currentGroup.push(sorted[i])
+			} else {
+				groups.push(currentGroup)
+				currentGroup = [sorted[i]]
+			}
+		}
+		groups.push(currentGroup)
+		return groups
+	}
+
+	// Function to update visible cards (partial visibility) and drive active bar
+	function updateVisibleCards() {
+		if (!carouselList) return
+
+		const cards = carouselList.querySelectorAll('.carousel-item')
+		const containerRect = carouselList.getBoundingClientRect()
+		const fullyVisibleSet = new Set()
+		let firstPartialIndex = -1
+		let lastPartialIndex = -1
+		let firstFullIndex = -1
+		let lastFullIndex = -1
+		const epsilon = 0.5
+
+		cards.forEach((card, index) => {
+			const cardRect = card.getBoundingClientRect()
+
+			// Partial visibility check (smooth) – consider as visible if overlapping
+			const overlapLeft = Math.max(cardRect.left, containerRect.left)
+			const overlapRight = Math.min(cardRect.right, containerRect.right)
+			const overlapWidth = overlapRight - overlapLeft
+			if (overlapWidth > 0) {
+				if (firstPartialIndex === -1) firstPartialIndex = index
+				lastPartialIndex = index
+			}
+
+			// Full visibility with small tolerance
+			const isFullyVisible =
+				cardRect.left >= containerRect.left + epsilon &&
+				cardRect.right <= containerRect.right - epsilon
+			if (isFullyVisible) {
+				fullyVisibleSet.add(index)
+				if (firstFullIndex === -1) firstFullIndex = index
+				lastFullIndex = index
+			}
+		})
+
+		// Expose fully visible for dot state; bar uses full if present else partial
+		visibleCards = fullyVisibleSet
+		const useFirst = firstFullIndex !== -1 ? firstFullIndex : firstPartialIndex
+		const useLast = lastFullIndex !== -1 ? lastFullIndex : lastPartialIndex
+
+		// Pick a single representative active button (middle of the visible range)
+		if (useFirst !== -1 && useLast !== -1) {
+			activeSingleIndex = Math.round((useFirst + useLast) / 2)
+		} else {
+			activeSingleIndex = -1
+		}
+
+		// Defer bar measurement to next frame to allow DOM/class updates to apply
+		requestAnimationFrame(() => {
+			updateActiveBarFromIndices(useFirst, useLast)
+		})
+
+		// Re-measure after button width transition settles to catch final layout
+		if (recalcTimeout) clearTimeout(recalcTimeout)
+		recalcTimeout = setTimeout(() => {
+			updateActiveBarFromIndices(useFirst, useLast)
+		}, 220)
+	}
+
+	// Function to animate a single active bar spanning first..last visible buttons
+	function updateActiveBarFromIndices(firstIndex, lastIndex) {
+		if (!buttonElements.length || !sliderButtonsContainer || !activeBar) return
+
+		if (firstIndex === -1 || lastIndex === -1) {
+			gsap.to(activeBar, { duration: 0.2, opacity: 0, ease: 'power2.out' })
+			activeSingleIndex = -1
+			return
+		}
+		const firstBtn = buttonElements[firstIndex]
+		const lastBtn = buttonElements[lastIndex]
+		if (!firstBtn || !lastBtn) return
+
+		const containerRect = sliderButtonsContainer.getBoundingClientRect()
+		const firstRect = firstBtn.getBoundingClientRect()
+		const lastRect = lastBtn.getBoundingClientRect()
+
+		const left = firstRect.left - containerRect.left
+		const right = lastRect.right - containerRect.left
+		const width = Math.max(0, right - left)
+
+		if (!quickLeft) {
+			quickLeft = gsap.quickTo(activeBar, 'left', { duration: 0.2, ease: 'power2.out' })
+		}
+		if (!quickWidth) {
+			quickWidth = gsap.quickTo(activeBar, 'width', { duration: 0.2, ease: 'power2.out' })
+		}
+		quickLeft(left)
+		quickWidth(width)
+		gsap.to(activeBar, { duration: 0.2, opacity: 1, ease: 'power2.out' })
+
+		// Pick a single representative active button (middle of the visible range)
+		activeSingleIndex = Math.round((firstIndex + lastIndex) / 2)
+	}
 
 	onMount(() => {
 		if (!carouselList) return
@@ -41,14 +182,80 @@
 			e.stopPropagation()
 		}
 
+		// Add scroll listener with rAF throttle for smooth updates
+		function handleScroll() {
+			if (scrollScheduled) return
+			scrollScheduled = true
+			requestAnimationFrame(() => {
+				updateVisibleCards()
+				scrollScheduled = false
+			})
+		}
+
 		carouselList.addEventListener('wheel', handleWheel, { passive: true })
 		carouselList.addEventListener('touchstart', handleTouch, { passive: true })
 		carouselList.addEventListener('touchmove', handleTouch, { passive: true })
+		carouselList.addEventListener('scroll', handleScroll, { passive: true })
+
+		// Initialize visible cards after layout with extra passes to ensure layout is settled
+		requestAnimationFrame(() => {
+			updateVisibleCards()
+			requestAnimationFrame(() => {
+				updateVisibleCards()
+				setTimeout(() => updateVisibleCards(), 240)
+			})
+		})
+
+		// Also run once after window load (fonts/images/layout shifts)
+		function handleWindowLoad() {
+			updateVisibleCards()
+		}
+		window.addEventListener('load', handleWindowLoad)
+
+		// Update on resize
+		function handleResize() {
+			updateVisibleCards()
+		}
+		window.addEventListener('resize', handleResize)
+
+		// Observe size changes of the carousel and its items
+		if (typeof ResizeObserver !== 'undefined') {
+			resizeObserver = new ResizeObserver(() => {
+				// throttle via rAF
+				if (scrollScheduled) return
+				scrollScheduled = true
+				requestAnimationFrame(() => {
+					updateVisibleCards()
+					scrollScheduled = false
+				})
+			})
+			resizeObserver.observe(carouselList)
+			carouselList.querySelectorAll('.carousel-item').forEach((el) => resizeObserver.observe(el))
+		}
+
+		// Observe DOM changes in the carousel (e.g. items mount asynchronously)
+		if (typeof MutationObserver !== 'undefined') {
+			mutationObserver = new MutationObserver(() => {
+				updateVisibleCards()
+				// ensure new nodes also observed by ResizeObserver
+				if (resizeObserver) {
+					carouselList
+						.querySelectorAll('.carousel-item')
+						.forEach((el) => resizeObserver.observe(el))
+				}
+			})
+			mutationObserver.observe(carouselList, { childList: true, subtree: true })
+		}
 
 		return () => {
 			carouselList.removeEventListener('wheel', handleWheel)
 			carouselList.removeEventListener('touchstart', handleTouch)
 			carouselList.removeEventListener('touchmove', handleTouch)
+			carouselList.removeEventListener('scroll', handleScroll)
+			window.removeEventListener('resize', handleResize)
+			window.removeEventListener('load', handleWindowLoad)
+			if (resizeObserver) resizeObserver.disconnect()
+			if (mutationObserver) mutationObserver.disconnect()
 		}
 	})
 </script>
@@ -79,14 +286,40 @@
 
 		<ul
 			bind:this={carouselList}
-			class="carousel-list flex gap-4 overflow-x-auto px-4 md:px-8 lg:px-8"
+			class="carousel-list flex gap-4 overflow-x-auto px-4 md:px-8 lg:grid lg:grid-cols-5 lg:px-8"
 		>
 			{#each CARDS as { component: Card, name }}
-				<li class="carousel-item h-full w-[263px] flex-shrink-0 lg:w-[280px] xl:w-[320px]">
+				<li class="carousel-item h-full w-[263px] flex-shrink-0 lg:w-auto">
 					<Card className="w-auto h-full" />
 				</li>
 			{/each}
 		</ul>
+
+		<!-- {#if !$mediaQuery.lg} -->
+		<div
+			class="border-light mx-auto mt-8 flex w-fit justify-center rounded-[20px] border px-3 py-2 lg:z-[-1]"
+		>
+			<div
+				class="slider-buttons relative flex items-center gap-2"
+				bind:this={sliderButtonsContainer}
+			>
+				<!-- Active merged bar -->
+				<span bind:this={activeBar} class="active-bar"></span>
+				{#each CARDS as _, index}
+					<button
+						bind:this={buttonElements[index]}
+						class="slider-button"
+						class:active={visibleCards.has(index)}
+						class:activeSingle={index === activeSingleIndex}
+						on:click={() => scrollToCard(index)}
+						aria-label="Go to card {index + 1}"
+					>
+						<span class="slider-button-inner"></span>
+					</button>
+				{/each}
+			</div>
+		</div>
+		<!-- {/if} -->
 	</div>
 </section>
 
@@ -117,5 +350,66 @@
 			/* More gentle snap on desktop */
 			scroll-snap-stop: normal;
 		}
+	}
+
+	/* Slider button styles */
+	.slider-button {
+		width: 8px;
+		height: 8px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		padding: 0;
+		position: relative;
+		z-index: 1;
+		transition: width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.slider-button-inner {
+		width: 100%;
+		transition:
+			width 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+			background-color 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		height: 8px;
+		border-radius: 4px;
+		background: #d9d9d9;
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	.slider-button:hover .slider-button-inner {
+		background: #cdef33;
+	}
+
+	/* Active buttons (visible cards) */
+	.slider-button.active .slider-button-inner {
+		background: #cdef33;
+	}
+
+	/* Single active button variant */
+	.slider-button.activeSingle {
+		width: 27px;
+	}
+
+	/* Active merged bar */
+	.slider-buttons {
+		gap: 8px;
+		position: relative;
+	}
+
+	.active-bar {
+		position: absolute;
+		height: 8px;
+		left: 0;
+		top: 50%; /* center over buttons */
+		width: 0;
+		background: #cdef33;
+		border-radius: 4px;
+		opacity: 0;
+		pointer-events: none;
+		z-index: 2;
+		transform: translateY(-50%);
 	}
 </style>
