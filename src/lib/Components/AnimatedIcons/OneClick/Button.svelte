@@ -1,6 +1,6 @@
 <script>
 	import { gsap } from 'gsap'
-	import { onMount } from 'svelte'
+	import { onMount, createEventDispatcher } from 'svelte'
 
 	export let x
 	export let y
@@ -13,6 +13,7 @@
 	// Button states
 	export let state = 0 // 0 = normal, 1 = pressed
 	export { state as buttonState } // Make state available to parent
+	const dispatch = createEventDispatcher()
 
 	// Animation constants
 	const ANIMATION_DURATION = 0.2 // Duration for each animation phase (seconds)
@@ -104,6 +105,19 @@
 		isAnimating = true
 		state = state === 0 ? 1 : 0
 		animateToPressed()
+
+		// Emit component click event for parent listeners
+		dispatch('click', { state })
+	}
+
+	// React to external state changes by playing click animation
+	let prevState = state
+	$: if (state !== prevState) {
+		prevState = state
+		if (!isAnimating) {
+			isAnimating = true
+			animateToPressed()
+		}
 	}
 
 	// Animate to pressed state

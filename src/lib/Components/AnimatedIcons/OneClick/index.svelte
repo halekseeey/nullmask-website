@@ -4,7 +4,7 @@
 	import Left from './Left.svelte'
 	import Right from './Right.svelte'
 	import { gsap } from 'gsap'
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
 
 	export let className = ''
 
@@ -13,7 +13,8 @@
 
 	let buttonRef
 	let colorPaths = []
-	let buttonState = 1
+	let buttonState = 0
+	let autoFlipTimeout
 
 	// References to paths with CDEF33 color
 	let colorPath1, colorPath2, colorPath3, colorPath4, colorPath5, colorPath6
@@ -26,6 +27,11 @@
 
 	// Animate colors based on button state
 	function animateColors() {
+		// Clear any running tweens/timelines for these targets before starting new ones
+		const blurPaths = [blurPath1, blurPath2, blurPath3, blurPath4, blurPath5]
+		const allTargets = [...colorPaths, ...blurPaths].filter(Boolean)
+		gsap.killTweensOf(allTargets)
+
 		const targetColor = buttonState === 0 ? '#D9D9D9' : '#CDEF33'
 		const targetOpacity = buttonState === 1 ? 1 : 0
 
@@ -65,7 +71,6 @@
 		// })
 
 		// Animate blur path elements fill color and fill-opacity
-		const blurPaths = [blurPath1, blurPath2, blurPath3, blurPath4, blurPath5]
 		blurPaths.forEach((path) => {
 			if (path) {
 				const targetFill = buttonState === 1 ? '#CACACA' : '#CACACA'
@@ -88,6 +93,26 @@
 		setTimeout(() => {
 			animateColors()
 		}, 10)
+	}
+
+	// Track if the last change was manual (user click) or automatic
+	let isManualChange = false
+
+	// Whenever state becomes 0, auto-switch to 1 after timeout
+	$: if (buttonState === 0) {
+		clearTimeout(autoFlipTimeout)
+		const timeoutMs = isManualChange ? 5000 : 2000
+		autoFlipTimeout = setTimeout(() => {
+			buttonState = 1
+			isManualChange = false
+		}, timeoutMs)
+	} else {
+		clearTimeout(autoFlipTimeout)
+	}
+
+	// Listen for manual clicks on the button to set flag
+	function handleButtonClick() {
+		isManualChange = true
 	}
 
 	onMount(() => {
@@ -121,6 +146,10 @@
 				path.setAttribute('fill-opacity', targetFillOpacity)
 			}
 		})
+	})
+
+	onDestroy(() => {
+		clearTimeout(autoFlipTimeout)
 	})
 </script>
 
@@ -454,7 +483,7 @@
 		/>
 	</g>
 
-	<Button x={0} y={479.89} bind:buttonState />
+	<Button x={0} y={479.89} bind:buttonState on:click={handleButtonClick} />
 
 	<Coin x={301.52} y={286.51} animationDuration={2} />
 	<Coin x={300.57} y={313.07} rotation={21.98} animationDuration={2} />

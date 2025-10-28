@@ -29,7 +29,7 @@
 			<p class="mb-8 text-3xl uppercase">Web3's First Wallet VPN</p>
 
 			<button
-				class="bg-green hover:bg-dark hover:text-light mb-20 w-fit rounded-[10px] px-4 py-2 text-2xl font-[300] transition-all duration-300"
+				class="bg-green hover:bg-dark hover:text-green mb-20 w-fit rounded-[10px] px-4 py-2 text-2xl font-[300] transition-all duration-300"
 			>
 				Be the first to know
 			</button>
