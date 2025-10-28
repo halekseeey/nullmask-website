@@ -222,7 +222,7 @@
 		function handleWheel(e) {
 			// Prevent all wheel scrolling on carousel
 			e.preventDefault()
-			e.stopPropagation()
+			// e.stopPropagation()
 		}
 
 		// Handle touch events - prevent parent snap scroll when touching carousel
