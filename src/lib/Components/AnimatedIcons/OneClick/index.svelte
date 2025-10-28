@@ -498,7 +498,7 @@
 	<path
 		data-figma-bg-blur-radius="3.33054"
 		d="M484.879 79.752V62.252L483.213 104.961L483.213 122.461L484.879 79.752Z"
-		fill="#D9D9D9"
+		fill="#CACACA"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
@@ -516,7 +516,7 @@
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M183.971 398.687V125.928L293.438 187.928V460.678L183.971 398.687Z"
-		fill="#202221"
+		fill="#CACACA"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
@@ -534,7 +534,7 @@
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M368.805 459.704V187.135L293.439 188.111V460.68L368.805 459.704Z"
-		fill="#202221"
+		fill="#CACACA"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
@@ -552,7 +552,7 @@
 	<path
 		data-figma-bg-blur-radius="3.33054"
 		d="M484.879 352.125V79.834L483.213 122.543L483.213 394.834L484.879 352.125Z"
-		fill="#D9D9D9"
+		fill="#CACACA"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
@@ -570,7 +570,7 @@
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M368.803 459.707L368.803 187.134L483.21 122.596V394.834L368.803 459.707Z"
-		fill="#202221"
+		fill="#CACACA"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
