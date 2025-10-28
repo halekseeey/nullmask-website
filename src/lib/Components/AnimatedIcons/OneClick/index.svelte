@@ -21,6 +21,9 @@
 	// References to blur elements
 	let blur1, blur2, blur3, blur4, blur5
 
+	// References to blur path elements that need to be animated
+	let blurPath1, blurPath2, blurPath3, blurPath4, blurPath5
+
 	// Animate colors based on button state
 	function animateColors() {
 		const targetColor = buttonState === 0 ? '#D9D9D9' : '#CDEF33'
@@ -49,14 +52,31 @@
 			}
 		})
 
-		// Animate blur elements
-		const blurElements = [blur1, blur2, blur3, blur4, blur5]
-		blurElements.forEach((blur) => {
-			if (blur) {
-				gsap.to(blur, {
+		// // Animate blur elements
+		// const blurElements = [blur1, blur2, blur3, blur4, blur5]
+		// blurElements.forEach((blur) => {
+		// 	if (blur) {
+		// 		gsap.to(blur, {
+		// 			duration: COLOR_TRANSITION_DURATION,
+		// 			ease: 'power2.inOut',
+		// 			opacity: targetOpacity
+		// 		})
+		// 	}
+		// })
+
+		// Animate blur path elements fill color and fill-opacity
+		const blurPaths = [blurPath1, blurPath2, blurPath3, blurPath4, blurPath5]
+		blurPaths.forEach((path) => {
+			if (path) {
+				const targetFill = buttonState === 1 ? '#CACACA' : '#CACACA'
+				const targetFillOpacity = buttonState === 1 ? 0.85 : 0.5
+				gsap.to(path, {
 					duration: COLOR_TRANSITION_DURATION,
 					ease: 'power2.inOut',
-					opacity: targetOpacity
+					attr: {
+						fill: targetFill,
+						'fill-opacity': targetFillOpacity
+					}
 				})
 			}
 		})
@@ -83,11 +103,22 @@
 			}
 		})
 
-		// Set initial opacity for blur elements based on buttonState
-		const blurElements = [blur1, blur2, blur3, blur4, blur5]
-		blurElements.forEach((blur) => {
-			if (blur) {
-				blur.style.opacity = buttonState === 1 ? '1' : '0'
+		// // Set initial opacity for blur elements based on buttonState
+		// const blurElements = [blur1, blur2, blur3, blur4, blur5]
+		// blurElements.forEach((blur) => {
+		// 	if (blur) {
+		// 		blur.style.opacity = buttonState === 1 ? '1' : '0'
+		// 	}
+		// })
+
+		// Set initial fill color and fill-opacity for blur paths based on buttonState
+		const blurPaths = [blurPath1, blurPath2, blurPath3, blurPath4, blurPath5]
+		blurPaths.forEach((path) => {
+			if (path) {
+				const targetFill = buttonState === 1 ? '#CACACA' : '#CACACA'
+				const targetFillOpacity = buttonState === 1 ? '0.85' : '0.5'
+				path.setAttribute('fill', targetFill)
+				path.setAttribute('fill-opacity', targetFillOpacity)
 			}
 		})
 	})
@@ -457,13 +488,13 @@
 		stroke-miterlimit="10"
 	/>
 	<!-- blur -->
-	<foreignObject x="479.632" y="58.9116" width="8.82709" height="66.8896"
+	<!-- <foreignObject x="479.632" y="58.9116" width="8.82709" height="66.8896"
 		><div
 			xmlns="http://www.w3.org/1999/xhtml"
 			bind:this={blur1}
 			style="backdrop-filter:blur(1.67px);clip-path:url(#bgblur_0_3094_4332_clip_path);height:100%;width:100%"
 		></div></foreignObject
-	>
+	> -->
 	<path
 		data-figma-bg-blur-radius="3.33054"
 		d="M484.879 79.752V62.252L483.213 104.961L483.213 122.461L484.879 79.752Z"
@@ -471,49 +502,53 @@
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
+		bind:this={blurPath1}
+		fill-opacity="1"
 	/>
 	<!-- blur -->
-	<foreignObject x="168.721" y="110.499" width="139.968" height="365.607"
+	<!-- <foreignObject x="168.721" y="110.499" width="139.968" height="365.607"
 		><div
 			xmlns="http://www.w3.org/1999/xhtml"
 			bind:this={blur2}
 			style="backdrop-filter:blur(7.5px);clip-path:url(#bgblur_1_3094_4332_clip_path);height:100%;width:100%"
 		></div></foreignObject
-	>
+	> -->
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M183.971 398.687V125.928L293.438 187.928V460.678L183.971 398.687Z"
-		fill="#CACACA"
-		fill-opacity="0.5"
+		fill="#202221"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
+		bind:this={blurPath2}
+		fill-opacity="0.8"
 	/>
 	<!-- blur -->
-	<foreignObject x="278.189" y="171.882" width="105.865" height="304.052"
+	<!-- <foreignObject x="278.189" y="171.882" width="105.865" height="304.052"
 		><div
 			xmlns="http://www.w3.org/1999/xhtml"
 			bind:this={blur3}
 			style="backdrop-filter:blur(7.5px);clip-path:url(#bgblur_2_3094_4332_clip_path);height:100%;width:100%"
 		></div></foreignObject
-	>
+	> -->
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M368.805 459.704V187.135L293.439 188.111V460.68L368.805 459.704Z"
-		fill="#CACACA"
-		fill-opacity="0.5"
+		fill="#202221"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
+		bind:this={blurPath3}
+		fill-opacity="0.8"
 	/>
 	<!-- blur -->
-	<foreignObject x="479.632" y="76.4937" width="8.82709" height="321.681"
+	<!-- <foreignObject x="479.632" y="76.4937" width="8.82709" height="321.681"
 		><div
 			bind:this={blur4}
 			xmlns="http://www.w3.org/1999/xhtml"
 			style="backdrop-filter:blur(1.67px);clip-path:url(#bgblur_3_3094_4332_clip_path);height:100%;width:100%"
 		></div></foreignObject
-	>
+	> -->
 	<path
 		data-figma-bg-blur-radius="3.33054"
 		d="M484.879 352.125V79.834L483.213 122.543L483.213 394.834L484.879 352.125Z"
@@ -521,23 +556,26 @@
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
+		bind:this={blurPath4}
+		fill-opacity="1"
 	/>
 	<!-- blur -->
-	<foreignObject x="353.553" y="107.168" width="144.907" height="367.968"
+	<!-- <foreignObject x="353.553" y="107.168" width="144.907" height="367.968"
 		><div
 			bind:this={blur5}
 			xmlns="http://www.w3.org/1999/xhtml"
 			style="backdrop-filter:blur(7.5px);clip-path:url(#bgblur_4_3094_4332_clip_path);height:100%;width:100%"
 		></div></foreignObject
-	>
+	> -->
 	<path
 		data-figma-bg-blur-radius="15"
 		d="M368.803 459.707L368.803 187.134L483.21 122.596V394.834L368.803 459.707Z"
-		fill="#CACACA"
-		fill-opacity="0.5"
+		fill="#202221"
 		stroke="#202221"
 		stroke-width="0.5"
 		stroke-miterlimit="10"
+		bind:this={blurPath5}
+		fill-opacity="0.8"
 	/>
 	<path
 		d="M368.803 187.469V169.318L483.21 104.779L483.21 122.597L368.803 187.469Z"
