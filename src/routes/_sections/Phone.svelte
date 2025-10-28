@@ -66,23 +66,40 @@
 	aria-label="Interactive phone demonstration"
 >
 	<div
-		class="relative mx-auto flex h-full max-w-[1440px] items-center justify-end"
+		class="relative mx-auto flex h-full max-w-[1440px] flex-col md:flex-row md:items-center md:justify-end"
 		style="padding-top: {$mediaQuery.md ? HEADER.height.desktop : HEADER.height.mobile}px;"
 	>
 		<div
-			class="absolute h-full w-[1094px] md:-left-20 lg:left-10 xl:left-24"
+			class="xs:ml-6 s:ml-10 relative z-[1] ml-4 flex flex-col md:ml-0 md:mr-10 md:text-right lg:mr-16 xl:mr-32"
+		>
+			<h2
+				class="phone-top s:text-[35px] mb-4 mt-14 text-[28px] font-[500] leading-[1.1] md:mb-2 md:text-[45px]"
+			>
+				Your wallet, <br /> your transactions
+			</h2>
+
+			<p class="s:text-2xl text-xl md:mb-80 md:text-3xl">Private in just 2 clicks.</p>
+		</div>
+
+		<div
+			class=" flex-grow md:absolute md:-left-20 md:h-full md:w-[1094px] lg:left-10 xl:left-24"
 			style="top: {$mediaQuery.md
 				? HEADER.height.desktop
-				: HEADER.height.mobile}px; rotate: -11.81deg"
+				: HEADER.height.mobile}px; rotate: -11.81deg; {$mediaQuery.md ? '' : 'transform-origin'}"
 		>
-			<Phone bind:this={phoneRef} className="h-full w-full object-contain" />
-		</div>
-		<div class="relative z-[1] flex flex-col text-right md:mr-10 lg:mr-16 xl:mr-32">
-			<h1 class="mb-2 text-[45px] leading-[1.1]">
-				Your wallet, <br /> your transactions
-			</h1>
-
-			<p class="mb-80 text-3xl">Private in just 2 clicks.</p>
+			<Phone
+				bind:this={phoneRef}
+				className="h-full w-full object-contain aspect-[444/495]"
+				viewBox={$mediaQuery.md ? '0 0 1094 916' : '0 200 604 446'}
+			/>
 		</div>
 	</div>
 </section>
+
+<style>
+	@media (max-height: 700px) {
+		.phone-top {
+			margin-top: 20px !important;
+		}
+	}
+</style>

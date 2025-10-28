@@ -9,6 +9,8 @@
 
 	export let className = ''
 
+	export let viewBox = '0 0 1094 916'
+
 	const INITIAL_DELAY = 1
 	const FINGER_MOVEMENT = 1
 	const FINGER_CLICK = 0.3
@@ -319,7 +321,7 @@
 <svg
 	width="1094"
 	height="916"
-	viewBox="0 0 1094 916"
+	{viewBox}
 	fill="none"
 	xmlns="http://www.w3.org/2000/svg"
 	on:click={handleClick}
@@ -328,6 +330,7 @@
 	role="button"
 	tabindex="0"
 	class={className}
+	preserveAspectRatio="xMidYMid meet"
 	aria-label="Interactive phone animation"
 >
 	<g clip-path="url(#clip0_3115_7837)">
