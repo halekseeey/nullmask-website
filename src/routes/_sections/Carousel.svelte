@@ -192,7 +192,7 @@
 			})
 		}
 
-		carouselList.addEventListener('wheel', handleWheel, { passive: true })
+		// carouselList.addEventListener('wheel', handleWheel, { passive: true })
 		carouselList.addEventListener('touchstart', handleTouch, { passive: true })
 		carouselList.addEventListener('touchmove', handleTouch, { passive: true })
 		carouselList.addEventListener('scroll', handleScroll, { passive: true })
@@ -248,7 +248,7 @@
 		}
 
 		return () => {
-			carouselList.removeEventListener('wheel', handleWheel)
+			// carouselList.removeEventListener('wheel', handleWheel)
 			carouselList.removeEventListener('touchstart', handleTouch)
 			carouselList.removeEventListener('touchmove', handleTouch)
 			carouselList.removeEventListener('scroll', handleScroll)
